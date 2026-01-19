@@ -1,7 +1,7 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import prisma from "@/src/lib/prisma";
-import { signupOwnerAction } from "@/src/app/(auth)/signup/actions";
+import { signupOwnerAction } from "@/src/app/auth/signup/actions";
 
 let dbAvailable: boolean | null = null;
 
