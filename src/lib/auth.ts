@@ -7,59 +7,70 @@ import prisma from "@/src/lib/prisma";
 import { randomUUID } from "crypto";
 
 export const authConfig = {
-  emailAndPassword: {
-    enabled: true,
-  },
-  databaseHooks: {
-    user: {
-      create: {
-        after: async (user, context) => {
-          if (!context?.path?.endsWith("/sign-up/email")) return;
+	emailAndPassword: {
+		enabled: true,
+	},
+	databaseHooks: {
+		user: {
+			create: {
+				after: async (user, context) => {
+					if (!context?.path?.endsWith("/sign-up/email")) return;
 
-          const agencyName =
-            typeof context?.body?.agencyName === "string"
-              ? context.body.agencyName.trim()
-              : "";
+					const agencyName =
+						typeof context?.body?.agencyName === "string"
+							? context.body.agencyName.trim()
+							: "";
 
-          if (!agencyName) {
-            await prisma.user.delete({ where: { id: user.id } }).catch(() => {});
-            throw new APIError("BAD_REQUEST", {
-              message: "Agency name is required",
-            });
-          }
+					const cleanupUser = async (userId: string) => {
+						try {
+							await prisma.user.delete({ where: { id: userId } });
+						} catch (cleanupError) {
+							console.error(
+								`Failed to cleanup user ${userId}:`,
+								cleanupError,
+							);
+						}
+					};
 
-          try {
-            await prisma.$transaction(async (tx) => {
-              const agency = await tx.agency.create({
-                data: { name: agencyName },
-              });
+					if (!agencyName) {
+						cleanupUser(user.id);
+						throw new APIError("BAD_REQUEST", {
+							message: "Agency name is required",
+						});
+					}
 
-              await tx.membership.create({
-                data: {
-                  userId: user.id,
-                  agencyId: agency.id,
-                  role: Role.OWNER,
-                },
-              });
-            });
-          } catch (error) {
-            await prisma.user.delete({ where: { id: user.id } }).catch(() => {});
-            throw new APIError("INTERNAL_SERVER_ERROR", {
-              message: "Unable to create agency",
-            });
-          }
-        },
-      },
-    },
-  },
-  plugins: [nextCookies()],
-  // @ts-ignore - generateId is valid but not in types
-  generateId: () => randomUUID(),
+					try {
+						await prisma.$transaction(async (tx) => {
+							const agency = await tx.agency.create({
+								data: { name: agencyName },
+							});
+
+							await tx.membership.create({
+								data: {
+									userId: user.id,
+									agencyId: agency.id,
+									role: Role.OWNER,
+								},
+							});
+						});
+					} catch (error) {
+						await cleanupUser(user.id);
+						throw new APIError("INTERNAL_SERVER_ERROR", {
+							message: "Unable to create agency",
+						});
+					}
+				},
+			},
+		},
+	},
+	plugins: [nextCookies()],
+	// @ts-ignore - generateId is valid but not in types
+	generateId: () => randomUUID(),
 };
 
 export const auth = betterAuth({
-  database: prismaAdapter(prisma, {
-    provider: "postgresql",
-  }),
-  ...authConfig,
+	database: prismaAdapter(prisma, {
+		provider: "postgresql",
+	}),
+	...authConfig,
 });
