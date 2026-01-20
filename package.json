@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "NODE_OPTIONS=--import=dotenv/config tsx --test",
+    "test": "NODE_OPTIONS=--import=dotenv/config tsx --test --test-concurrency=1",
     "lint": "eslint"
   },
   "dependencies": {

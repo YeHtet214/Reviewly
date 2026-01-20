@@ -22,7 +22,7 @@ async function resetDb() {
   await prisma.user.deleteMany();
 }
 
-describe("signupOwner (db)", () => {
+describe("signupOwner (db)", { concurrency: 1 }, () => {
   beforeEach(async (t) => {
     if (!(await ensureDbAvailable())) {
       t.skip("Database not available");
