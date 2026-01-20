@@ -14,7 +14,7 @@ export const authConfig = {
     user: {
       create: {
         after: async (user, context) => {
-          if (context?.path !== "/sign-up/email") return;
+          if (!context?.path?.endsWith("/sign-up/email")) return;
 
           const agencyName =
             typeof context?.body?.agencyName === "string"
