@@ -6,9 +6,10 @@ import { Button } from "@/src/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/src/components/ui/card";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
+import { signupOwnerAction } from "./actions";
 
 type FieldErrors = Partial<
-  Record<"name" | "email" | "password" | "agencyName", string>
+  Record<"name" | "email" | "password" | "agencyName", string[]>
 >;
 
 export default function SignupPage() {
@@ -25,47 +26,18 @@ export default function SignupPage() {
       setFormError(null);
       setFieldErrors({});
 
-      const payload = new URLSearchParams();
-      payload.set("name", String(formData.get("name") || ""));
-      payload.set("email", String(formData.get("email") || ""));
-      payload.set("password", String(formData.get("password") || ""));
-      payload.set("agencyName", String(formData.get("agencyName") || ""));
+      const result = await signupOwnerAction(formData);
 
-      try {
-        const response = await fetch("/api/auth/sign-up/email", {
-          method: "POST",
-          headers: {
-            "content-type": "application/x-www-form-urlencoded",
-          },
-          body: payload,
-          credentials: "include",
-        });
+      if (result.ok) {
+        router.push(result.redirectTo);
+        return;
+      }
 
-        if (response.ok) {
-          router.push("/");
-          return;
-        }
-
-        const data = await response.json().catch(() => null);
-        const message =
-          (data && typeof data.message === "string" && data.message) ||
-          "Unable to create account.";
-        const lower = message.toLowerCase();
-        const nextFieldErrors: FieldErrors = {};
-
-        if (lower.includes("name")) nextFieldErrors.name = message;
-        if (lower.includes("email")) nextFieldErrors.email = message;
-        if (lower.includes("password")) nextFieldErrors.password = message;
-        if (lower.includes("agency")) nextFieldErrors.agencyName = message;
-
-        if (Object.keys(nextFieldErrors).length > 0) {
-          setFieldErrors(nextFieldErrors);
-          return;
-        }
-
-        setFormError(message);
-      } catch (error) {
-        setFormError("Unable to create account.");
+      if (result.fieldErrors) {
+        setFieldErrors(result.fieldErrors);
+      }
+      if (result.formError) {
+        setFormError(result.formError);
       }
     });
   }
@@ -94,73 +66,89 @@ export default function SignupPage() {
 
             <div className="space-y-4">
               <div>
-                <Label className="mb-1 block text-left text-sm font-medium text-neutral-900">
+                <Label
+                  htmlFor="name"
+                  className="mb-1 block text-left text-sm font-medium text-neutral-900"
+                >
                   Full name
                 </Label>
                 <Input
+                  id="name"
                   name="name"
                   type="text"
                   placeholder="John Doe"
                   autoComplete="name"
                   className="h-11 rounded-full border-transparent bg-neutral-100 px-4"
                 />
-                {fieldErrors.name ? (
+                {fieldErrors.name?.[0] ? (
                   <p className="mt-1 text-sm text-red-600">
-                    {fieldErrors.name}
+                    {fieldErrors.name[0]}
                   </p>
                 ) : null}
               </div>
 
               <div>
-                <Label className="mb-1 block text-left text-sm font-medium text-neutral-900">
+                <Label
+                  htmlFor="email"
+                  className="mb-1 block text-left text-sm font-medium text-neutral-900"
+                >
                   Work email
                 </Label>
                 <Input
+                  id="email"
                   name="email"
                   type="email"
                   placeholder="you@company.com"
                   autoComplete="email"
                   className="h-11 rounded-full border-transparent bg-neutral-100 px-4"
                 />
-                {fieldErrors.email ? (
+                {fieldErrors.email?.[0] ? (
                   <p className="mt-1 text-sm text-red-600">
-                    {fieldErrors.email}
+                    {fieldErrors.email[0]}
                   </p>
                 ) : null}
               </div>
 
               <div>
-                <Label className="mb-1 block text-left text-sm font-medium text-neutral-900">
+                <Label
+                  htmlFor="password"
+                  className="mb-1 block text-left text-sm font-medium text-neutral-900"
+                >
                   Password
                 </Label>
                 <Input
+                  id="password"
                   name="password"
                   type="password"
                   placeholder="••••••••"
                   autoComplete="new-password"
                   className="h-11 rounded-full border-transparent bg-neutral-100 px-4"
                 />
-                {fieldErrors.password ? (
+                {fieldErrors.password?.[0] ? (
                   <p className="mt-1 text-sm text-red-600">
-                    {fieldErrors.password}
+                    {fieldErrors.password[0]}
                   </p>
                 ) : null}
               </div>
 
               <div>
-                <Label className="mb-1 block text-left text-sm font-medium text-neutral-900">
+                <Label
+                  htmlFor="agencyName"
+                  className="mb-1 block text-left text-sm font-medium text-neutral-900"
+                >
                   Agency name
                 </Label>
                 <Input
+                  id="agencyName"
                   name="agencyName"
                   type="text"
                   placeholder="Your agency"
                   autoComplete="organization"
                   className="h-11 rounded-full border-transparent bg-neutral-100 px-4"
                 />
-                {fieldErrors.agencyName ? (
+                {fieldErrors.agencyName?.[0] ? (
                   <p className="mt-1 text-sm text-red-600">
-                    {fieldErrors.agencyName}
+                    {fieldErrors.agencyName[0]}
                   </p>
                 ) : null}
               </div>

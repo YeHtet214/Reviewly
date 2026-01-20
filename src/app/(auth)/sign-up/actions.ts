@@ -8,43 +8,48 @@ import { type SignupActionResult } from "@/src/types/auth";
 const DEFAULT_REDIRECT = "/";
 
 export async function signupOwnerAction(
-  formData: FormData,
+	formData: FormData,
 ): Promise<SignupActionResult> {
-  const raw = {
-    name: String(formData.get("name") || ""),
-    email: String(formData.get("email") || ""),
-    password: String(formData.get("password") || ""),
-    agencyName: String(formData.get("agencyName") || ""),
-  };
+	const raw = {
+		name: String(formData.get("name") || ""),
+		email: String(formData.get("email") || ""),
+		password: String(formData.get("password") || ""),
+		agencyName: String(formData.get("agencyName") || ""),
+	};
 
-  const parsed = signupOwnerSchema.safeParse(raw);
-  if (!parsed.success) {
-    return {
-      ok: false,
-      fieldErrors: parsed.error.flatten().fieldErrors,
-    };
-  }
+	const parsed = signupOwnerSchema.safeParse(raw);
+	if (!parsed.success) {
+		return {
+			ok: false,
+			fieldErrors: parsed.error.flatten().fieldErrors,
+		};
+	}
 
-  try {
-    await auth.api.signUpEmail({
-      body: {
-        name: parsed.data.name,
-        email: parsed.data.email,
-        password: parsed.data.password,
-        agencyName: parsed.data.agencyName,
-      },
-    });
+	try {
+		await auth.api.signUpEmail({
+			body: {
+				name: parsed.data.name,
+				email: parsed.data.email,
+				password: parsed.data.password,
+				agencyName: parsed.data.agencyName,
+			},
+		});
 
-    return { ok: true, redirectTo: DEFAULT_REDIRECT };
-  } catch (error) {
-    if (error instanceof APIError) {
-      if (error.message?.toLowerCase().includes("exists")) {
-        return { ok: false, formError: "Unable to create account." };
-      }
+		return { ok: true, redirectTo: DEFAULT_REDIRECT };
+	} catch (error) {
+		if (error instanceof APIError) {
+			if ((error as any).code === "ACCOUNT_EXISTS") {
+				return {
+					ok: false,
+					fieldErrors: { email: "Email already in use." },
+				};
+			}
+			return {
+				ok: false,
+				formError: error.message || "Unable to create account.",
+			};
+		}
 
-      return { ok: false, formError: error.message || "Unable to create account." };
-    }
-
-    return { ok: false, formError: "Unable to create account." };
-  }
+		return { ok: false, formError: "Unable to create account." };
+	}
 }
