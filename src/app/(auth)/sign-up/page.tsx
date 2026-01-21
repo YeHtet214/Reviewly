@@ -1,13 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Button } from "@/src/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/src/components/ui/card";
-import { Input } from "@/src/components/ui/input";
-import { Label } from "@/src/components/ui/label";
 import { signupOwnerAction } from "./actions";
-import Link from "next/link";
 
 type FieldErrors = Partial<
   Record<"name" | "email" | "password" | "agencyName", string[]>
@@ -44,138 +40,113 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-neutral-100 px-4">
-      <Card className="w-full max-w-[440px] rounded-xl border-transparent p-8 shadow-sm">
-        <CardHeader className="p-0">
-          <div className="mb-6 text-center text-lg font-semibold text-neutral-900">
-            AgencyHub
-          </div>
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold text-neutral-900">
-              Create your account
-            </h1>
-            <p className="mb-6 mt-2 text-base text-neutral-500">
-              Start managing your agencies today
-            </p>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          <form onSubmit={handleSubmit}>
-            {formError ? (
-              <p className="mb-4 text-sm text-red-600">{formError}</p>
-            ) : null}
+    <main className="auth-shell">
+      <div className="auth-card">
+        <div className="stack-6">
+          <header className="stack-3">
+            <div className="auth-brand">
+              <span className="section-title">Reviewly</span>
+            </div>
+            <div>
+              <h1 className="auth-title">Create your account</h1>
+              <p className="auth-subtitle">
+                Start managing your agencies today
+              </p>
+            </div>
+          </header>
 
-            <div className="space-y-4">
-              <div>
-                <Label
-                  htmlFor="name"
-                  className="mb-1 block text-left text-sm font-medium text-neutral-900"
-                >
+          <form onSubmit={handleSubmit} className="stack-4">
+            {formError ? <p className="error-text">{formError}</p> : null}
+
+            <div className="stack-4">
+              <div className="stack-2">
+                <label htmlFor="name" className="label">
                   Full name
-                </Label>
-                <Input
+                </label>
+                <input
                   id="name"
                   name="name"
                   type="text"
                   placeholder="John Doe"
                   autoComplete="name"
-                  className="h-11 rounded-full border-transparent bg-neutral-100 px-4"
+                  className={`input${fieldErrors.name?.[0] ? " input-invalid" : ""}`}
                 />
                 {fieldErrors.name?.[0] ? (
-                  <p className="mt-1 text-sm text-red-600">
-                    {fieldErrors.name[0]}
-                  </p>
+                  <p className="error-text">{fieldErrors.name[0]}</p>
                 ) : null}
               </div>
 
-              <div>
-                <Label
-                  htmlFor="email"
-                  className="mb-1 block text-left text-sm font-medium text-neutral-900"
-                >
+              <div className="stack-2">
+                <label htmlFor="email" className="label">
                   Work email
-                </Label>
-                <Input
+                </label>
+                <input
                   id="email"
                   name="email"
                   type="email"
                   placeholder="you@company.com"
                   autoComplete="email"
-                  className="h-11 rounded-full border-transparent bg-neutral-100 px-4"
+                  className={`input${fieldErrors.email?.[0] ? " input-invalid" : ""}`}
                 />
                 {fieldErrors.email?.[0] ? (
-                  <p className="mt-1 text-sm text-red-600">
-                    {fieldErrors.email[0]}
-                  </p>
+                  <p className="error-text">{fieldErrors.email[0]}</p>
                 ) : null}
               </div>
 
-              <div>
-                <Label
-                  htmlFor="password"
-                  className="mb-1 block text-left text-sm font-medium text-neutral-900"
-                >
+              <div className="stack-2">
+                <label htmlFor="password" className="label">
                   Password
-                </Label>
-                <Input
+                </label>
+                <input
                   id="password"
                   name="password"
                   type="password"
                   placeholder="••••••••"
                   autoComplete="new-password"
-                  className="h-11 rounded-full border-transparent bg-neutral-100 px-4"
+                  className={`input${
+                    fieldErrors.password?.[0] ? " input-invalid" : ""
+                  }`}
                 />
                 {fieldErrors.password?.[0] ? (
-                  <p className="mt-1 text-sm text-red-600">
-                    {fieldErrors.password[0]}
-                  </p>
+                  <p className="error-text">{fieldErrors.password[0]}</p>
                 ) : null}
               </div>
 
-              <div>
-                <Label
-                  htmlFor="agencyName"
-                  className="mb-1 block text-left text-sm font-medium text-neutral-900"
-                >
+              <div className="stack-2">
+                <label htmlFor="agencyName" className="label">
                   Agency name
-                </Label>
-                <Input
+                </label>
+                <input
                   id="agencyName"
                   name="agencyName"
                   type="text"
                   placeholder="Your agency"
                   autoComplete="organization"
-                  className="h-11 rounded-full border-transparent bg-neutral-100 px-4"
+                  className={`input${
+                    fieldErrors.agencyName?.[0] ? " input-invalid" : ""
+                  }`}
                 />
                 {fieldErrors.agencyName?.[0] ? (
-                  <p className="mt-1 text-sm text-red-600">
-                    {fieldErrors.agencyName[0]}
-                  </p>
+                  <p className="error-text">{fieldErrors.agencyName[0]}</p>
                 ) : null}
               </div>
             </div>
 
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="mt-6 h-11 w-full rounded-full bg-pink-500 text-sm font-semibold text-white"
-            >
+            <button type="submit" disabled={isPending} className="btn-primary w-full">
               {isPending ? "Creating account..." : "Create account"}
-            </Button>
+            </button>
 
-            <p className="mt-3 text-center text-sm text-neutral-500">
-              This will create a new agency for you
-            </p>
+            <p className="muted">This will create a new agency for you</p>
 
-            <p className="mt-6 text-center text-sm text-neutral-600">
-              Already have an account?{" "}
-              <Link className="font-medium text-pink-500" href="/sign-in">
+            <div className="row-start">
+              <span className="muted">Already have an account?</span>
+              <Link className="btn-ghost" href="/sign-in">
                 Sign in
               </Link>
-            </p>
+            </div>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </main>
   );
 }

@@ -1,11 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Button } from "@/src/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/src/components/ui/card";
-import { Input } from "@/src/components/ui/input";
-import { Label } from "@/src/components/ui/label";
 import { signInAction } from "./actions";
 
 type FieldErrors = Partial<Record<"email" | "password", string[]>>;
@@ -41,96 +38,78 @@ export default function SignInPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-neutral-100 px-4">
-      <Card className="w-full max-w-[440px] rounded-xl border-transparent p-8 shadow-sm">
-        <CardHeader className="p-0">
-          <div className="mb-6 flex items-center justify-center gap-2">
-            <span className="inline-flex h-6 w-6 rounded-full bg-pink-500" />
-            <span className="text-lg font-semibold text-neutral-900">
-              AgencyHub
-            </span>
-          </div>
-          <div className="text-center">
-            <h1 className="text-2xl font-semibold text-neutral-900">Sign in</h1>
-            <p className="mb-6 mt-2 text-base text-neutral-500">
-              Welcome back to AgencyHub
-            </p>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          <form onSubmit={handleSubmit}>
-            {formError ? (
-              <p className="mb-4 text-sm text-red-600">{formError}</p>
-            ) : null}
+    <main className="auth-shell">
+      <div className="auth-card">
+        <div className="stack-6">
+          <header className="stack-3">
+            <div className="auth-brand">
+              <span className="section-title">Reviewly</span>
+            </div>
+            <div>
+              <h1 className="auth-title">Sign in</h1>
+              <p className="auth-subtitle">Welcome back to Reviewly</p>
+            </div>
+          </header>
 
-            <div className="space-y-4">
-              <div>
-                <Label
-                  htmlFor="email"
-                  className="mb-1 block text-left text-sm font-medium text-neutral-900"
-                >
+          <form onSubmit={handleSubmit} className="stack-4">
+            {formError ? <p className="error-text">{formError}</p> : null}
+
+            <div className="stack-4">
+              <div className="stack-2">
+                <label htmlFor="email" className="label">
                   Email
-                </Label>
-                <Input
+                </label>
+                <input
                   id="email"
                   name="email"
                   type="email"
                   placeholder="you@company.com"
                   autoComplete="email"
-                  className="h-11 rounded-full border-transparent bg-neutral-100 px-4"
+                  className={`input${fieldErrors.email?.[0] ? " input-invalid" : ""}`}
                 />
                 {fieldErrors.email?.[0] ? (
-                  <p className="mt-1 text-sm text-red-600">
-                    {fieldErrors.email[0]}
-                  </p>
+                  <p className="error-text">{fieldErrors.email[0]}</p>
                 ) : null}
               </div>
 
-              <div>
-                <div className="mb-1 flex items-center justify-between">
-                  <Label
-                    htmlFor="password"
-                    className="text-left text-sm font-medium text-neutral-900"
-                  >
+              <div className="stack-2">
+                <div className="row">
+                  <label htmlFor="password" className="label">
                     Password
-                  </Label>
-                  <a className="text-sm font-medium text-pink-500" href="#">
+                  </label>
+                  <a className="btn-ghost" href="#">
                     Forgot password?
                   </a>
                 </div>
-                <Input
+                <input
                   id="password"
                   name="password"
                   type="password"
                   placeholder="••••••••"
                   autoComplete="current-password"
-                  className="h-11 rounded-full border-transparent bg-neutral-100 px-4"
+                  className={`input${
+                    fieldErrors.password?.[0] ? " input-invalid" : ""
+                  }`}
                 />
                 {fieldErrors.password?.[0] ? (
-                  <p className="mt-1 text-sm text-red-600">
-                    {fieldErrors.password[0]}
-                  </p>
+                  <p className="error-text">{fieldErrors.password[0]}</p>
                 ) : null}
               </div>
             </div>
 
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="mt-6 h-11 w-full rounded-full bg-pink-500 text-sm font-semibold text-white"
-            >
+            <button type="submit" disabled={isPending} className="btn-primary w-full">
               {isPending ? "Signing in..." : "Sign in"}
-            </Button>
+            </button>
 
-            <p className="mt-6 text-center text-sm text-neutral-600">
-              Don&apos;t have an account?{" "}
-              <a className="font-medium text-pink-500" href="/sign-up">
+            <div className="row-start">
+              <span className="muted">Don&apos;t have an account?</span>
+              <Link className="btn-ghost" href="/sign-up">
                 Sign up
-              </a>
-            </p>
+              </Link>
+            </div>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </main>
   );
 }
