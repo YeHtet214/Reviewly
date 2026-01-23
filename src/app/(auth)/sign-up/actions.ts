@@ -26,14 +26,18 @@ export async function signupOwnerAction(
 	}
 
 	try {
-		await auth.api.signUpEmail({
-			body: {
-				name: parsed.data.name,
-				email: parsed.data.email,
-				password: parsed.data.password,
-				agencyName: parsed.data.agencyName,
-			},
-		});
+		type SignUpEmailBody =
+			NonNullable<Parameters<typeof auth.api.signUpEmail>[0]>["body"] & {
+			agencyName: string;
+		};
+		const body: SignUpEmailBody = {
+			name: parsed.data.name,
+			email: parsed.data.email,
+			password: parsed.data.password,
+			agencyName: parsed.data.agencyName,
+		};
+
+		await auth.api.signUpEmail({ body });
 
 		return { ok: true, redirectTo: DEFAULT_REDIRECT };
 	} catch (error) {
@@ -41,7 +45,7 @@ export async function signupOwnerAction(
 			if ((error as any).code === "ACCOUNT_EXISTS") {
 				return {
 					ok: false,
-					fieldErrors: { email: "Email already in use." },
+					fieldErrors: { email: ["Email already in use."] },
 				};
 			}
 			return {

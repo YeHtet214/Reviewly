@@ -50,6 +50,27 @@ describe("signupOwnerAction", () => {
     }
   });
 
+  it("creates agency and membership via database hooks", async () => {
+    const result = await signupOwnerAction(buildForm());
+    assert.equal(result.ok, true);
+
+    const user = await prisma.user.findUnique({
+      where: { email: "alicia@example.com" },
+    });
+    assert.ok(user);
+
+    const agency = await prisma.agency.findFirst({
+      where: { name: "Keys Agency" },
+    });
+    assert.ok(agency);
+
+    const membership = await prisma.membership.findFirst({
+      where: { userId: user?.id, agencyId: agency?.id },
+    });
+    assert.ok(membership);
+    assert.equal(membership?.role, "OWNER");
+  });
+
   it("returns ok:false with a generic message for existing signup", async () => {
     await prisma.user.create({
       data: {
@@ -68,7 +89,7 @@ describe("signupOwnerAction", () => {
 
     assert.equal(result.ok, false);
     if (!result.ok) {
-      assert.equal(result.formError, "Unable to create account.");
+      assert.deepEqual(result.fieldErrors?.email, ["Email already in use."]);
     }
     assert.equal(afterUsers, beforeUsers);
   });
