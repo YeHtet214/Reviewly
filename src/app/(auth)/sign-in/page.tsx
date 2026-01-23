@@ -77,9 +77,16 @@ export default function SignInPage() {
                   <label htmlFor="password" className="label">
                     Password
                   </label>
-                  <a className="btn-ghost" href="#">
+                  <button
+                    type="button"
+                    className="btn-ghost"
+                    aria-disabled="true"
+                    disabled
+                    title="Password recovery is not available yet"
+                    aria-label="Password recovery is not available yet"
+                  >
                     Forgot password?
-                  </a>
+                  </button>
                 </div>
                 <input
                   id="password"

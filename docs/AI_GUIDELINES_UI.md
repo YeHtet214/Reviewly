@@ -122,29 +122,11 @@ Before creating new markup, check `global.css`.
 * `.auth-shell`
 * `.auth-card`
 
-“For spacing and layout in forms, use .stack-* and .row* primitives only. Do not use margin/padding utilities for layout.”
+For spacing and layout in forms, use `.stack-*` and `.row*` primitives only.
 
-3) Refactor guidance for the agent (what to tell it)
+#### Do not use margin/padding utilities for layout
 
-Use this instruction:
-
-Page wrapper: .auth-shell
-
-Card: .auth-card stack-5
-
-Header group: stack-2
-
-Form: stack-4
-
-Each field group: stack-2
-
-Label row: .row (label left, link right)
-
-Errors: .error-text
-
-Button: .btn-primary w-full
-
-No custom styling unless explicitly required.
+Use the following UI structure for auth forms: page wrapper `.auth-shell`; card `.auth-card` with `stack-5`; header group `stack-2`; form `stack-4`; each field group `stack-2`; label row `.row` with the label on the left and the link on the right; errors `.error-text`; and the primary button `.btn-primary w-full`. No custom styling should be applied unless explicitly required.
 
 ---
 
@@ -217,11 +199,3 @@ If any check fails → revise.
 **End of UI Guidelines**
 
 ---
-
-If you want next, I can:
-
-* Merge this cleanly into your existing `AI_GUIDELINES.md`
-* Generate a **one-line short version** to prepend to prompts
-* Create a **PR review checklist** derived from this doc
-
-Say which one you want.

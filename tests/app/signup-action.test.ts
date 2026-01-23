@@ -89,7 +89,7 @@ describe("signupOwnerAction", () => {
 
     assert.equal(result.ok, false);
     if (!result.ok) {
-      assert.equal(result.formError, "User already exists. Use another email.");
+      assert.deepEqual(result.fieldErrors?.email, ["Email already in use."]);
     }
     assert.equal(afterUsers, beforeUsers);
   });
