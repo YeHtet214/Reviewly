@@ -14,6 +14,7 @@ model Agency {
 
   // relations
   memberships Membership[]
+  invitations Invitation[]
 
   @@map("agency")
 }
@@ -29,6 +30,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   memberships   Membership[]
+  sentInvitations Invitation[]
 
   @@unique([email])
   @@map("user")
@@ -38,6 +40,11 @@ enum Role {
   OWNER
   ADMIN
   MEMBER
+}
+
+enum InvitationType {
+  MEMBER
+  CLIENT
 }
 
 model Membership {
@@ -52,6 +59,29 @@ model Membership {
   agency Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
 
   @@map("membership")
+}
+
+model Invitation {
+  id              String         @id @default(cuid())
+  type            InvitationType
+  email           String
+  tokenHash       String         @unique
+  agencyId        String?
+  projectId       String?
+  role            Role?
+  invitedByUserId String?
+  expiresAt       DateTime
+  consumedAt      DateTime?
+  createdAt       DateTime       @default(now())
+
+  // relations
+  agency        Agency? @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  invitedByUser User?   @relation(fields: [invitedByUserId], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@index([agencyId])
+  @@index([projectId])
+  @@map("invitation")
 }
 
 model Session {

@@ -54,6 +54,7 @@ export const ModelName = {
   Agency: 'Agency',
   User: 'User',
   Membership: 'Membership',
+  Invitation: 'Invitation',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification'
@@ -106,6 +107,23 @@ export const MembershipScalarFieldEnum = {
 } as const
 
 export type MembershipScalarFieldEnum = (typeof MembershipScalarFieldEnum)[keyof typeof MembershipScalarFieldEnum]
+
+
+export const InvitationScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  email: 'email',
+  tokenHash: 'tokenHash',
+  agencyId: 'agencyId',
+  projectId: 'projectId',
+  role: 'role',
+  invitedByUserId: 'invitedByUserId',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type InvitationScalarFieldEnum = (typeof InvitationScalarFieldEnum)[keyof typeof InvitationScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {
