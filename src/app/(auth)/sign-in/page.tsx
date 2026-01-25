@@ -3,13 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { signupOwnerAction } from "./actions";
+import { signInAction } from "./actions";
 
-type FieldErrors = Partial<
-  Record<"name" | "email" | "password" | "agencyName", string[]>
->;
+type FieldErrors = Partial<Record<"email" | "password", string[]>>;
 
-export default function SignupPage() {
+export default function SignInPage() {
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -23,7 +21,7 @@ export default function SignupPage() {
       setFormError(null);
       setFieldErrors({});
 
-      const result = await signupOwnerAction(formData);
+      const result = await signInAction(formData);
 
       if (result.ok) {
         router.push(result.redirectTo);
@@ -48,10 +46,8 @@ export default function SignupPage() {
               <span className="section-title">Reviewly</span>
             </div>
             <div>
-              <h1 className="auth-title">Create your account</h1>
-              <p className="auth-subtitle">
-                Start managing your agencies today
-              </p>
+              <h1 className="auth-title">Sign in</h1>
+              <p className="auth-subtitle">Welcome back to Reviewly</p>
             </div>
           </header>
 
@@ -60,25 +56,8 @@ export default function SignupPage() {
 
             <div className="stack-4">
               <div className="stack-2">
-                <label htmlFor="name" className="label">
-                  Full name
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="John Doe"
-                  autoComplete="name"
-                  className={`input${fieldErrors.name?.[0] ? " input-invalid" : ""}`}
-                />
-                {fieldErrors.name?.[0] ? (
-                  <p className="error-text">{fieldErrors.name[0]}</p>
-                ) : null}
-              </div>
-
-              <div className="stack-2">
                 <label htmlFor="email" className="label">
-                  Work email
+                  Email
                 </label>
                 <input
                   id="email"
@@ -94,15 +73,27 @@ export default function SignupPage() {
               </div>
 
               <div className="stack-2">
-                <label htmlFor="password" className="label">
-                  Password
-                </label>
+                <div className="row">
+                  <label htmlFor="password" className="label">
+                    Password
+                  </label>
+                  <button
+                    type="button"
+                    className="btn-ghost"
+                    aria-disabled="true"
+                    disabled
+                    title="Password recovery is not available yet"
+                    aria-label="Password recovery is not available yet"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
                 <input
                   id="password"
                   name="password"
                   type="password"
                   placeholder="••••••••"
-                  autoComplete="new-password"
+                  autoComplete="current-password"
                   className={`input${
                     fieldErrors.password?.[0] ? " input-invalid" : ""
                   }`}
@@ -111,37 +102,16 @@ export default function SignupPage() {
                   <p className="error-text">{fieldErrors.password[0]}</p>
                 ) : null}
               </div>
-
-              <div className="stack-2">
-                <label htmlFor="agencyName" className="label">
-                  Agency name
-                </label>
-                <input
-                  id="agencyName"
-                  name="agencyName"
-                  type="text"
-                  placeholder="Your agency"
-                  autoComplete="organization"
-                  className={`input${
-                    fieldErrors.agencyName?.[0] ? " input-invalid" : ""
-                  }`}
-                />
-                {fieldErrors.agencyName?.[0] ? (
-                  <p className="error-text">{fieldErrors.agencyName[0]}</p>
-                ) : null}
-              </div>
             </div>
 
             <button type="submit" disabled={isPending} className="btn-primary w-full">
-              {isPending ? "Creating account..." : "Create account"}
+              {isPending ? "Signing in..." : "Sign in"}
             </button>
 
-            <p className="muted">This will create a new agency for you</p>
-
             <div className="row-start">
-              <span className="muted">Already have an account?</span>
-              <Link className="btn-ghost" href="/sign-in">
-                Sign in
+              <span className="muted">Don&apos;t have an account?</span>
+              <Link className="btn-ghost" href="/sign-up">
+                Sign up
               </Link>
             </div>
           </form>
