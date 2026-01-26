@@ -11,6 +11,7 @@
 export type * from './models/Agency'
 export type * from './models/User'
 export type * from './models/Membership'
+export type * from './models/Invitation'
 export type * from './models/Session'
 export type * from './models/Account'
 export type * from './models/Verification'

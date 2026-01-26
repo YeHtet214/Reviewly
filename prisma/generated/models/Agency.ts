@@ -167,6 +167,7 @@ export type AgencyWhereInput = {
   name?: Prisma.StringFilter<"Agency"> | string
   createdAt?: Prisma.DateTimeFilter<"Agency"> | Date | string
   memberships?: Prisma.MembershipListRelationFilter
+  invitations?: Prisma.InvitationListRelationFilter
 }
 
 export type AgencyOrderByWithRelationInput = {
@@ -174,6 +175,7 @@ export type AgencyOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   memberships?: Prisma.MembershipOrderByRelationAggregateInput
+  invitations?: Prisma.InvitationOrderByRelationAggregateInput
 }
 
 export type AgencyWhereUniqueInput = Prisma.AtLeast<{
@@ -184,6 +186,7 @@ export type AgencyWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Agency"> | string
   createdAt?: Prisma.DateTimeFilter<"Agency"> | Date | string
   memberships?: Prisma.MembershipListRelationFilter
+  invitations?: Prisma.InvitationListRelationFilter
 }, "id">
 
 export type AgencyOrderByWithAggregationInput = {
@@ -209,6 +212,7 @@ export type AgencyCreateInput = {
   name: string
   createdAt?: Date | string
   memberships?: Prisma.MembershipCreateNestedManyWithoutAgencyInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutAgencyInput
 }
 
 export type AgencyUncheckedCreateInput = {
@@ -216,6 +220,7 @@ export type AgencyUncheckedCreateInput = {
   name: string
   createdAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAgencyInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAgencyInput
 }
 
 export type AgencyUpdateInput = {
@@ -223,6 +228,7 @@ export type AgencyUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUpdateManyWithoutAgencyNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutAgencyNestedInput
 }
 
 export type AgencyUncheckedUpdateInput = {
@@ -230,6 +236,7 @@ export type AgencyUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAgencyNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAgencyNestedInput
 }
 
 export type AgencyCreateManyInput = {
@@ -273,6 +280,11 @@ export type AgencyScalarRelationFilter = {
   isNot?: Prisma.AgencyWhereInput
 }
 
+export type AgencyNullableScalarRelationFilter = {
+  is?: Prisma.AgencyWhereInput | null
+  isNot?: Prisma.AgencyWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -295,16 +307,34 @@ export type AgencyUpdateOneRequiredWithoutMembershipsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AgencyUpdateToOneWithWhereWithoutMembershipsInput, Prisma.AgencyUpdateWithoutMembershipsInput>, Prisma.AgencyUncheckedUpdateWithoutMembershipsInput>
 }
 
+export type AgencyCreateNestedOneWithoutInvitationsInput = {
+  create?: Prisma.XOR<Prisma.AgencyCreateWithoutInvitationsInput, Prisma.AgencyUncheckedCreateWithoutInvitationsInput>
+  connectOrCreate?: Prisma.AgencyCreateOrConnectWithoutInvitationsInput
+  connect?: Prisma.AgencyWhereUniqueInput
+}
+
+export type AgencyUpdateOneWithoutInvitationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AgencyCreateWithoutInvitationsInput, Prisma.AgencyUncheckedCreateWithoutInvitationsInput>
+  connectOrCreate?: Prisma.AgencyCreateOrConnectWithoutInvitationsInput
+  upsert?: Prisma.AgencyUpsertWithoutInvitationsInput
+  disconnect?: Prisma.AgencyWhereInput | boolean
+  delete?: Prisma.AgencyWhereInput | boolean
+  connect?: Prisma.AgencyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AgencyUpdateToOneWithWhereWithoutInvitationsInput, Prisma.AgencyUpdateWithoutInvitationsInput>, Prisma.AgencyUncheckedUpdateWithoutInvitationsInput>
+}
+
 export type AgencyCreateWithoutMembershipsInput = {
   id?: string
   name: string
   createdAt?: Date | string
+  invitations?: Prisma.InvitationCreateNestedManyWithoutAgencyInput
 }
 
 export type AgencyUncheckedCreateWithoutMembershipsInput = {
   id?: string
   name: string
   createdAt?: Date | string
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutAgencyInput
 }
 
 export type AgencyCreateOrConnectWithoutMembershipsInput = {
@@ -327,12 +357,58 @@ export type AgencyUpdateWithoutMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invitations?: Prisma.InvitationUpdateManyWithoutAgencyNestedInput
 }
 
 export type AgencyUncheckedUpdateWithoutMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutAgencyNestedInput
+}
+
+export type AgencyCreateWithoutInvitationsInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutAgencyInput
+}
+
+export type AgencyUncheckedCreateWithoutInvitationsInput = {
+  id?: string
+  name: string
+  createdAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutAgencyInput
+}
+
+export type AgencyCreateOrConnectWithoutInvitationsInput = {
+  where: Prisma.AgencyWhereUniqueInput
+  create: Prisma.XOR<Prisma.AgencyCreateWithoutInvitationsInput, Prisma.AgencyUncheckedCreateWithoutInvitationsInput>
+}
+
+export type AgencyUpsertWithoutInvitationsInput = {
+  update: Prisma.XOR<Prisma.AgencyUpdateWithoutInvitationsInput, Prisma.AgencyUncheckedUpdateWithoutInvitationsInput>
+  create: Prisma.XOR<Prisma.AgencyCreateWithoutInvitationsInput, Prisma.AgencyUncheckedCreateWithoutInvitationsInput>
+  where?: Prisma.AgencyWhereInput
+}
+
+export type AgencyUpdateToOneWithWhereWithoutInvitationsInput = {
+  where?: Prisma.AgencyWhereInput
+  data: Prisma.XOR<Prisma.AgencyUpdateWithoutInvitationsInput, Prisma.AgencyUncheckedUpdateWithoutInvitationsInput>
+}
+
+export type AgencyUpdateWithoutInvitationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutAgencyNestedInput
+}
+
+export type AgencyUncheckedUpdateWithoutInvitationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutAgencyNestedInput
 }
 
 
@@ -342,10 +418,12 @@ export type AgencyUncheckedUpdateWithoutMembershipsInput = {
 
 export type AgencyCountOutputType = {
   memberships: number
+  invitations: number
 }
 
 export type AgencyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | AgencyCountOutputTypeCountMembershipsArgs
+  invitations?: boolean | AgencyCountOutputTypeCountInvitationsArgs
 }
 
 /**
@@ -365,12 +443,20 @@ export type AgencyCountOutputTypeCountMembershipsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.MembershipWhereInput
 }
 
+/**
+ * AgencyCountOutputType without action
+ */
+export type AgencyCountOutputTypeCountInvitationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InvitationWhereInput
+}
+
 
 export type AgencySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   createdAt?: boolean
   memberships?: boolean | Prisma.Agency$membershipsArgs<ExtArgs>
+  invitations?: boolean | Prisma.Agency$invitationsArgs<ExtArgs>
   _count?: boolean | Prisma.AgencyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["agency"]>
 
@@ -395,6 +481,7 @@ export type AgencySelectScalar = {
 export type AgencyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt", ExtArgs["result"]["agency"]>
 export type AgencyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | Prisma.Agency$membershipsArgs<ExtArgs>
+  invitations?: boolean | Prisma.Agency$invitationsArgs<ExtArgs>
   _count?: boolean | Prisma.AgencyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AgencyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -404,6 +491,7 @@ export type $AgencyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Agency"
   objects: {
     memberships: Prisma.$MembershipPayload<ExtArgs>[]
+    invitations: Prisma.$InvitationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -804,6 +892,7 @@ readonly fields: AgencyFieldRefs;
 export interface Prisma__AgencyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   memberships<T extends Prisma.Agency$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agency$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invitations<T extends Prisma.Agency$invitationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Agency$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1245,6 +1334,30 @@ export type Agency$membershipsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.MembershipScalarFieldEnum | Prisma.MembershipScalarFieldEnum[]
+}
+
+/**
+ * Agency.invitations
+ */
+export type Agency$invitationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invitation
+   */
+  select?: Prisma.InvitationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invitation
+   */
+  omit?: Prisma.InvitationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvitationInclude<ExtArgs> | null
+  where?: Prisma.InvitationWhereInput
+  orderBy?: Prisma.InvitationOrderByWithRelationInput | Prisma.InvitationOrderByWithRelationInput[]
+  cursor?: Prisma.InvitationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InvitationScalarFieldEnum | Prisma.InvitationScalarFieldEnum[]
 }
 
 /**

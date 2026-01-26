@@ -16,3 +16,11 @@ export const Role = {
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
+
+
+export const InvitationType = {
+  MEMBER: 'MEMBER',
+  CLIENT: 'CLIENT'
+} as const
+
+export type InvitationType = (typeof InvitationType)[keyof typeof InvitationType]

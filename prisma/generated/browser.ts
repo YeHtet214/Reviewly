@@ -33,6 +33,11 @@ export type User = Prisma.UserModel
  */
 export type Membership = Prisma.MembershipModel
 /**
+ * Model Invitation
+ * 
+ */
+export type Invitation = Prisma.InvitationModel
+/**
  * Model Session
  * 
  */
