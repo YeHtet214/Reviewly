@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { hashInviteToken } from "../server/invitations/token";
 
 export default function Home() {
   const router = useRouter();
