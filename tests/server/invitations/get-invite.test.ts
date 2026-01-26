@@ -1,4 +1,4 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, after } from "node:test";
 import assert from "node:assert/strict";
 import prisma from "@/src/lib/prisma";
 import { getValidInvitation } from "@/src/server/invitations/get-invite";
@@ -37,6 +37,10 @@ describe("getValidInvitation", () => {
       return;
     }
     await resetDb();
+  });
+  after(async () => {
+    await prisma.$disconnect();
+    dbAvailable = null;
   });
 
   it("returns invitation for a valid token", async () => {

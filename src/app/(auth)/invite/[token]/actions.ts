@@ -5,20 +5,30 @@ import { getValidInvitation } from "@/src/server/invitations/get-invite";
 import { InviteErrorCode } from "@/src/server/invitations/errors";
 
 const SIGN_IN_PATH = "/sign-in";
+const DEFAULT_INVITE_ERROR_MESSAGE = "Invite link is invalid or expired.";
 
-export async function continueInviteAction(token: string) {
+type ContinueInviteActionResult =
+  | { ok: true }
+  | { ok: false; code: InviteErrorCode; message: string };
+
+export async function continueInviteAction(
+  token: string,
+): Promise<ContinueInviteActionResult> {
   const result = await getValidInvitation(token);
 
   if (!result.ok) {
-    if (
-      result.code === InviteErrorCode.NOT_FOUND ||
-      result.code === InviteErrorCode.EXPIRED ||
-      result.code === InviteErrorCode.CONSUMED ||
-      result.code === InviteErrorCode.INVALID
-    ) {
-      redirect(SIGN_IN_PATH);
-    }
-    return;
+    const messageByCode: Record<InviteErrorCode, string> = {
+      [InviteErrorCode.NOT_FOUND]: "Invite link was not found.",
+      [InviteErrorCode.EXPIRED]: "Invite link has expired.",
+      [InviteErrorCode.CONSUMED]: "Invite link has already been used.",
+      [InviteErrorCode.INVALID]: "Invite link is invalid.",
+    };
+
+    return {
+      ok: false,
+      code: result.code,
+      message: messageByCode[result.code] ?? DEFAULT_INVITE_ERROR_MESSAGE,
+    };
   }
 
   const params = new URLSearchParams({
