@@ -1,6 +1,8 @@
+import { InvitationModel } from './../../../prisma/generated/models/Invitation';
 import prisma from "@/src/lib/prisma";
 import { InviteErrorCode } from "./errors";
 import { hashInviteToken } from "./token";
+import { Invitation } from 'better-auth/plugins';
 
 type InvitationRecord = NonNullable<
 	Awaited<ReturnType<typeof prisma.invitation.findUnique>>
@@ -13,6 +15,10 @@ export type GetValidInvitationResult =
 export async function getValidInvitation(
 	token: string,
 ): Promise<GetValidInvitationResult> {
+	if (typeof token !== "string" || token.trim().length === 0) {
+		return { ok: false, code: InviteErrorCode.INVALID };
+	}
+
 	const tokenHash = hashInviteToken(token);
 	const invitation = await prisma.invitation.findUnique({
 		where: { tokenHash },

@@ -15,6 +15,7 @@ export async function signInAction(
     email: String(formData.get("email") || ""),
     password: String(formData.get("password") || ""),
   };
+  const inviteToken = String(formData.get("inviteToken") || "").trim();
 
   const parsed = signInSchema.safeParse(raw);
   if (!parsed.success) {
@@ -32,7 +33,11 @@ export async function signInAction(
       },
     });
 
-    return { ok: true, redirectTo: DEFAULT_REDIRECT };
+    const redirectTo = inviteToken
+      ? `/invite/complete?token=${encodeURIComponent(inviteToken)}`
+      : DEFAULT_REDIRECT;
+
+    return { ok: true, redirectTo };
   } catch (error) {
     if (error instanceof APIError) {
       return { ok: false, formError: INVALID_CREDENTIALS_MESSAGE };
