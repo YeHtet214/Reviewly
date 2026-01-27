@@ -13,6 +13,10 @@ export type GetValidInvitationResult =
 export async function getValidInvitation(
 	token: string,
 ): Promise<GetValidInvitationResult> {
+	if (typeof token !== "string" || token.trim().length === 0) {
+		return { ok: false, code: InviteErrorCode.INVALID };
+	}
+
 	const tokenHash = hashInviteToken(token);
 	const invitation = await prisma.invitation.findUnique({
 		where: { tokenHash },
