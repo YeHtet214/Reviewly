@@ -2,12 +2,14 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/src/lib/auth";
+import prisma from "@/src/lib/prisma";
 import { acceptInvite } from "@/src/server/invitations/accept-invite";
 import { InviteErrorCode } from "@/src/server/invitations/errors";
 import { getValidInvitation } from "@/src/server/invitations/get-invite";
 
 const SIGN_IN_PATH = "/sign-in";
 const SET_PASSWORD_PATH = "/set-password";
+const DASHBOARD_PATH = "/";
 const DEFAULT_INVITE_ERROR_MESSAGE = "Invite link is invalid or expired.";
 
 const MESSAGE_BY_CODE: Record<InviteErrorCode, string> = {
@@ -44,9 +46,10 @@ function InviteError({ title, message }: { title: string; message: string }) {
 export default async function InviteCompletePage({
   searchParams,
 }: {
-  searchParams: { token?: string };
+  searchParams: Promise<{ token?: string }>;
 }) {
-  const token = typeof searchParams.token === "string" ? searchParams.token : "";
+  const params = await searchParams;
+  const token = typeof params.token === "string" ? params.token : "";
 
   if (!token) {
     return (
@@ -96,5 +99,14 @@ export default async function InviteCompletePage({
     );
   }
 
-  redirect(SET_PASSWORD_PATH);
+  const credentialAccount = await prisma.account.findFirst({
+    where: {
+      userId: session.user.id,
+      providerId: "credential",
+      password: { not: null },
+    },
+    select: { id: true },
+  });
+
+  redirect(credentialAccount ? DASHBOARD_PATH : SET_PASSWORD_PATH);
 }

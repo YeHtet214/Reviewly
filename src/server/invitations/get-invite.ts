@@ -1,8 +1,6 @@
-import { InvitationModel } from './../../../prisma/generated/models/Invitation';
 import prisma from "@/src/lib/prisma";
 import { InviteErrorCode } from "./errors";
 import { hashInviteToken } from "./token";
-import { Invitation } from 'better-auth/plugins';
 
 type InvitationRecord = NonNullable<
 	Awaited<ReturnType<typeof prisma.invitation.findUnique>>

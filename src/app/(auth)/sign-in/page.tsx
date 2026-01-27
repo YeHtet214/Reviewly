@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { signInAction } from "./actions";
 
@@ -9,6 +9,8 @@ type FieldErrors = Partial<Record<"email" | "password", string[]>>;
 
 export default function SignInPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get("inviteToken") ?? "";
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [isPending, startTransition] = useTransition();
@@ -52,6 +54,7 @@ export default function SignInPage() {
           </header>
 
           <form onSubmit={handleSubmit} className="stack-4">
+            <input type="hidden" name="inviteToken" value={inviteToken} />
             {formError ? <p className="error-text">{formError}</p> : null}
 
             <div className="stack-4">

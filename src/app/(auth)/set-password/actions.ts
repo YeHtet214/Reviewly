@@ -21,7 +21,7 @@ type SetPasswordStatusResult =
   | { ok: false; redirectTo: string };
 
 export async function getSetPasswordStatusAction(): Promise<SetPasswordStatusResult> {
-  const session = await auth.api.getSession({ headers: headers() });
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { ok: false, redirectTo: "/sign-in" };
   }
@@ -58,7 +58,7 @@ export async function setPasswordAction(
     };
   }
 
-  const session = await auth.api.getSession({ headers: headers() });
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return {
       ok: false,
