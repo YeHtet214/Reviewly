@@ -1,0 +1,46 @@
+name: My First CI Pipeline
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  check-code-quality:
+    runs-on: ubuntu-latest 
+
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }} 
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }} 
+      BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }} 
+      INVITE_TOKEN_SECRET: ${{ secrets.INVITE_TOKEN_SECRET }}   
+      NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}  
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint Code
+        run: npm run lint
+
+      - name: Prisma Generate
+        run: npx prisma generate
+
+      - name: Build Project
+        run: npm run build
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
