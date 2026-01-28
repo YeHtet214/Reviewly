@@ -57,7 +57,7 @@ export const authConfig = {
 								},
 							});
 						});
-					} catch (error) {
+					} catch {
 						await cleanupUser(user.id);
 						throw new APIError("INTERNAL_SERVER_ERROR", {
 							message: "Unable to create agency",
