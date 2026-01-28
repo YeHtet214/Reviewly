@@ -10,5 +10,5 @@ export default function Home() {
      <h1 className="text-4xl">Reviewly</h1>
      <p>It&apos;s Running Smoothly.</p>
     </main>
-  );
+
 }
