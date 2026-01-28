@@ -82,7 +82,7 @@ export async function acceptInvite(
       const existingMembership = await tx.membership.findFirst({
         where: {
           userId,
-          agencyId: result.invitation.agencyId,
+          agencyId: result.invitation.agencyId!,
         },
         select: { id: true },
       });
@@ -91,7 +91,7 @@ export async function acceptInvite(
         await tx.membership.create({
           data: {
             userId,
-            agencyId: result.invitation.agencyId,
+            agencyId: result.invitation.agencyId!,
             role,
           },
         });

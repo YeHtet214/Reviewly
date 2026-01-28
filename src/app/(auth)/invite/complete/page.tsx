@@ -60,7 +60,7 @@ export default async function InviteCompletePage({
     );
   }
 
-  const session = await auth.api.getSession({ headers: headers() });
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     const params = new URLSearchParams({ inviteToken: token });
     redirect(`${SIGN_IN_PATH}?${params.toString()}`);

@@ -1,0 +1,109 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useTransition } from "react";
+import { signInAction } from "./actions";
+
+type FieldErrors = Partial<Record<"email" | "password", string[]>>;
+
+export default function SignInForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get("inviteToken") ?? "";
+  const [formError, setFormError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [isPending, startTransition] = useTransition();
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    startTransition(async () => {
+      setFormError(null);
+      setFieldErrors({});
+
+      const result = await signInAction(formData);
+
+      if (result.ok) {
+        router.push(result.redirectTo);
+        return;
+      }
+
+      if (result.fieldErrors) {
+        setFieldErrors(result.fieldErrors);
+      }
+      if (result.formError) {
+        setFormError(result.formError);
+      }
+    });
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="stack-4">
+      <input type="hidden" name="inviteToken" value={inviteToken} />
+      {formError ? <p className="error-text">{formError}</p> : null}
+
+      <div className="stack-4">
+        <div className="stack-2">
+          <label htmlFor="email" className="label">
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="you@company.com"
+            autoComplete="email"
+            className={`input${fieldErrors.email?.[0] ? " input-invalid" : ""}`}
+          />
+          {fieldErrors.email?.[0] ? (
+            <p className="error-text">{fieldErrors.email[0]}</p>
+          ) : null}
+        </div>
+
+        <div className="stack-2">
+          <div className="row">
+            <label htmlFor="password" className="label">
+              Password
+            </label>
+            <button
+              type="button"
+              className="btn-ghost"
+              aria-disabled="true"
+              disabled
+              title="Password recovery is not available yet"
+              aria-label="Password recovery is not available yet"
+            >
+              Forgot password?
+            </button>
+          </div>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="••••••••"
+            autoComplete="current-password"
+            className={`input${
+              fieldErrors.password?.[0] ? " input-invalid" : ""
+            }`}
+          />
+          {fieldErrors.password?.[0] ? (
+            <p className="error-text">{fieldErrors.password[0]}</p>
+          ) : null}
+        </div>
+      </div>
+
+      <button type="submit" disabled={isPending} className="btn-primary w-full">
+        {isPending ? "Signing in..." : "Sign in"}
+      </button>
+
+      <div className="row-start">
+        <span className="muted">Don&apos;t have an account?</span>
+        <Link className="btn-ghost" href="/sign-up">
+          Sign up
+        </Link>
+      </div>
+    </form>
+  );
+}

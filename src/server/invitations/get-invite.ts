@@ -1,6 +1,7 @@
 import prisma from "@/src/lib/prisma";
 import { InviteErrorCode } from "./errors";
 import { hashInviteToken } from "./token";
+import { Invitation } from "@/prisma/generated/client";
 
 type InvitationRecord = NonNullable<
 	Awaited<ReturnType<typeof prisma.invitation.findUnique>>
@@ -32,7 +33,7 @@ export async function getValidInvitation(
 			consumedAt: true,
 			createdAt: true,
 		},
-	});
+	}) as Invitation;
 
 	if (!invitation) {
 		return { ok: false, code: InviteErrorCode.NOT_FOUND };
