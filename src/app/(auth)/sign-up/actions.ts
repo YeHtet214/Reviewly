@@ -42,7 +42,7 @@ export async function signupOwnerAction(
 		return { ok: true, redirectTo: DEFAULT_REDIRECT };
 	} catch (error) {
 		if (error instanceof APIError) {
-			if ((error as any).code === "ACCOUNT_EXISTS") {
+			if (error.body?.code === "ACCOUNT_EXISTS") {
 				return {
 					ok: false,
 					fieldErrors: { email: ["Email already in use."] },
@@ -50,7 +50,8 @@ export async function signupOwnerAction(
 			}
 			return {
 				ok: false,
-				formError: error.message || "Unable to create account.",
+				formError:
+					error.body?.message || error.message || "Unable to create account.",
 			};
 		}
 
