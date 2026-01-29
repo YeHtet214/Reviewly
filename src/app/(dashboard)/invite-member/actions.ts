@@ -33,7 +33,17 @@ export async function createInviteAction(
     };
   }
 
-  const session = await auth.api.getSession({ headers: await headers() });
+  let session: Awaited<ReturnType<typeof auth.api.getSession>> | null = null;
+  try {
+    session = await auth.api.getSession({ headers: await headers() });
+  } catch (error) {
+    console.error("createInviteAction: unable to get session", { error });
+    return {
+      ok: false,
+      formError: "You must be signed in to invite a member.",
+    };
+  }
+
   if (!session?.user?.id) {
     return {
       ok: false,
