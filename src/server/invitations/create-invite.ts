@@ -1,5 +1,7 @@
 import { InvitationType, Role } from "@/prisma/generated/client";
 import prisma from "@/src/lib/prisma";
+import { sendEmail } from "@/src/server/email/ses";
+import { buildMemberInviteEmail } from "@/src/server/email/templates/member-invite";
 import { generateInviteToken, hashInviteToken } from "./token";
 
 const INVITE_EXPIRATION_DAYS = 7;
@@ -15,11 +17,11 @@ export type CreateInviteInput = {
 };
 
 export type CreateInviteResult =
-  | { ok: true; inviteUrl: string }
+  | { ok: true; inviteUrl: string; emailError?: string }
   | { ok: false; error: string };
 
 function buildInviteUrl(token: string): string {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || DEFAULT_BASE_URL;
+  const baseUrl = process.env.APP_BASE_URL || DEFAULT_BASE_URL;
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
   return `${normalizedBase}/invite/${token}`;
 }
@@ -37,7 +39,7 @@ export async function createInvite(
             agencyId,
             role: { in: INVITE_PERMISSION_ROLES },
           },
-          select: { agencyId: true },
+          select: { agencyId: true, agency: { select: { name: true } } },
         })
       : await prisma.membership.findFirst({
           where: {
@@ -45,7 +47,7 @@ export async function createInvite(
             role: { in: INVITE_PERMISSION_ROLES },
           },
           orderBy: { joinedAt: "asc" },
-          select: { agencyId: true },
+          select: { agencyId: true, agency: { select: { name: true } } },
         });
 
     if (!membership) {
@@ -73,7 +75,24 @@ export async function createInvite(
       },
     });
 
-    return { ok: true, inviteUrl: buildInviteUrl(token) };
+    const inviteUrl = buildInviteUrl(token);
+    const emailContent = buildMemberInviteEmail({
+      inviteUrl,
+      agencyName: membership.agency?.name,
+    });
+
+    const emailResult = await sendEmail({
+      to: email,
+      subject: emailContent.subject,
+      text: emailContent.text,
+      html: emailContent.html,
+    });
+
+    if (!emailResult.ok) {
+      return { ok: true, inviteUrl, emailError: emailResult.error };
+    }
+
+    return { ok: true, inviteUrl };
   } catch (error) {
     console.error("createInvite: unable to create member invitation", {
       error,
