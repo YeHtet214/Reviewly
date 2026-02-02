@@ -1,4 +1,3 @@
-
 import { betterAuth } from "better-auth";
 import type { User as AuthUser } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
