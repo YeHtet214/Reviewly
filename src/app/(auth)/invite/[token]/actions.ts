@@ -4,11 +4,14 @@ import { redirect } from "next/navigation";
 import { getValidInvitation } from "@/src/server/invitations/get-invite";
 
 const SIGN_IN_PATH = "/sign-in";
-export async function continueInviteAction(token: string): Promise<void> {
+
+export async function continueInviteAction(
+  token: string,
+): Promise<void> {
   const result = await getValidInvitation(token);
 
   if (!result.ok) {
-    return;
+    redirect(`/invite/${token}`);
   }
 
   const params = new URLSearchParams({
