@@ -79,10 +79,6 @@ export default async function InviteCompletePage({
         message={errorMessage}
       />
     );
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) {
-    const params = new URLSearchParams({ inviteToken: token });
-    redirect(`${SIGN_IN_PATH}?${params.toString()}`);
   }
 
   const inviteResult = await getValidInvitation(token);
