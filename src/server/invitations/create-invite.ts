@@ -81,6 +81,8 @@ export async function createInvite(
       agencyName: membership.agency?.name,
     });
 
+    console.log("Email content: ", emailContent)
+
     const emailResult = await sendEmail({
       to: email,
       subject: emailContent.subject,

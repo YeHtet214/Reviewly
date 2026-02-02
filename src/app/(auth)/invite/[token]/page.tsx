@@ -14,11 +14,11 @@ function inviteHelperText(type: "MEMBER" | "CLIENT") {
 }
 
 export default async function InvitePage({
-  params,
+  params
 }: {
-  params: { token: string };
+  params: Promise<{ token: string }>
 }) {
-  const token = params.token;
+  const { token } = await params;
   const result = await getValidInvitation(token);
   const title = result.ok
     ? "You're invited"

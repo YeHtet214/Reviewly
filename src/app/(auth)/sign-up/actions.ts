@@ -6,16 +6,20 @@ import { signupOwnerSchema } from "@/src/server/validation/auth";
 import { type SignupActionResult } from "@/src/types/auth";
 
 const DEFAULT_REDIRECT = "/";
+const INVITE_REDIRECT = "/invite/complete";
 
 export async function signupOwnerAction(
 	formData: FormData,
 ): Promise<SignupActionResult> {
+
+ console.log("form email:", formData.get("email"))
 	const raw = {
 		name: String(formData.get("name") || ""),
 		email: String(formData.get("email") || ""),
 		password: String(formData.get("password") || ""),
 		agencyName: String(formData.get("agencyName") || ""),
 	};
+	const inviteToken = String(formData.get("inviteToken") || "").trim();	
 
 	const parsed = signupOwnerSchema.safeParse(raw);
 	if (!parsed.success) {
@@ -39,7 +43,10 @@ export async function signupOwnerAction(
 
 		await auth.api.signUpEmail({ body });
 
-		return { ok: true, redirectTo: DEFAULT_REDIRECT };
+		const redirectTo = inviteToken
+			? `${INVITE_REDIRECT}?token=${encodeURIComponent(inviteToken)}`
+			: DEFAULT_REDIRECT;
+		return { ok: true, redirectTo };
 	} catch (error) {
 		if (error instanceof APIError) {
 			if ((error as any).code === "ACCOUNT_EXISTS") {

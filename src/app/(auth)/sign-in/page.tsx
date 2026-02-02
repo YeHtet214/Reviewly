@@ -11,9 +11,16 @@ export default function SignInPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const inviteToken = searchParams.get("inviteToken") ?? "";
+  const inviteEmail = searchParams.get("email") ?? "";
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [isPending, startTransition] = useTransition();
+  const signUpParams = new URLSearchParams();
+  if (inviteToken) signUpParams.set("inviteToken", inviteToken);
+  if (inviteEmail) signUpParams.set("email", inviteEmail);
+  const signUpHref = signUpParams.toString()
+    ? `/sign-up?${signUpParams.toString()}`
+    : "/sign-up";
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -55,6 +62,9 @@ export default function SignInPage() {
 
           <form onSubmit={handleSubmit} className="stack-4">
             <input type="hidden" name="inviteToken" value={inviteToken} />
+            {inviteEmail && inviteToken ? (
+              <input type="hidden" name="email" value={inviteEmail} />
+            ) : null}
             {formError ? <p className="error-text">{formError}</p> : null}
 
             <div className="stack-4">
@@ -68,6 +78,8 @@ export default function SignInPage() {
                   type="email"
                   placeholder="you@company.com"
                   autoComplete="email"
+                  defaultValue={inviteEmail}
+                  disabled={Boolean(inviteEmail && inviteToken)}
                   className={`input${fieldErrors.email?.[0] ? " input-invalid" : ""}`}
                 />
                 {fieldErrors.email?.[0] ? (
@@ -113,7 +125,7 @@ export default function SignInPage() {
 
             <div className="row-start">
               <span className="muted">Don&apos;t have an account?</span>
-              <Link className="btn-ghost" href="/sign-up">
+              <Link className="btn-ghost" href={signUpHref}>
                 Sign up
               </Link>
             </div>

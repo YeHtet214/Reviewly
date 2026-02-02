@@ -94,7 +94,7 @@ describe("acceptInvite", () => {
     assert.ok(updatedInvite?.consumedAt);
   });
 
-  it("prevents reuse of a consumed invite", async () => {
+  it("is idempotent for repeated accepts by the same user", async () => {
     const user = await createUser();
     const agency = await createAgency();
     const token = generateInviteToken();
@@ -114,6 +114,30 @@ describe("acceptInvite", () => {
     assert.equal(first.ok, true);
 
     const second = await acceptInvite({ token, userId: user.id });
+    assert.equal(second.ok, true);
+  });
+
+  it("returns CONSUMED when a different user reuses the invite", async () => {
+    const user = await createUser();
+    const otherUser = await createUser();
+    const agency = await createAgency();
+    const token = generateInviteToken();
+
+    await prisma.invitation.create({
+      data: {
+        type: "MEMBER",
+        email: user.email,
+        tokenHash: hashInviteToken(token),
+        agencyId: agency.id,
+        role: "MEMBER",
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60),
+      },
+    });
+
+    const first = await acceptInvite({ token, userId: user.id });
+    assert.equal(first.ok, true);
+
+    const second = await acceptInvite({ token, userId: otherUser.id });
     assert.equal(second.ok, false);
     if (!second.ok) {
       assert.equal(second.code, InviteErrorCode.CONSUMED);

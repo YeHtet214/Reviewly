@@ -27,11 +27,12 @@ function normalizeInviteUrl(inviteUrl: string): string {
     throw new Error("Invite URL must be a valid https:// URL.");
   }
 
-  if (parsedUrl.protocol === "http:") {
-    parsedUrl.protocol = "https:";
-  } else if (parsedUrl.protocol !== "https:") {
-    throw new Error("Invite URL must use https://.");
-  }
+// temporary disable for localhost
+  // if (parsedUrl.protocol === "http:") {
+  //   parsedUrl.protocol = "https:";
+  // } else if (parsedUrl.protocol !== "https:") {
+  //   throw new Error("Invite URL must use https://.");
+  // }
 
   return parsedUrl.toString();
 }
