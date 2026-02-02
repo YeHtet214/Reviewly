@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { Suspense, useState, useTransition } from "react";
 import { signupOwnerAction } from "./actions";
 
 type FieldErrors = Partial<
@@ -11,18 +11,9 @@ type FieldErrors = Partial<
 
 export default function SignupPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const inviteToken = searchParams.get("inviteToken") ?? "";
-  const inviteEmail = searchParams.get("email") ?? "";
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [isPending, startTransition] = useTransition();
-  const signInParams = new URLSearchParams();
-  if (inviteToken) signInParams.set("inviteToken", inviteToken);
-  if (inviteEmail) signInParams.set("email", inviteEmail);
-  const signInHref = signInParams.toString()
-    ? `/sign-in?${signInParams.toString()}`
-    : "/sign-in";
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -65,10 +56,6 @@ export default function SignupPage() {
           </header>
 
           <form onSubmit={handleSubmit} className="stack-4">
-            <input type="hidden" name="inviteToken" value={inviteToken} />
-            {inviteEmail && inviteToken ? (
-              <input type="hidden" name="email" value={inviteEmail} />
-            ) : null}
             {formError ? <p className="error-text">{formError}</p> : null}
 
             <div className="stack-4">
@@ -89,24 +76,9 @@ export default function SignupPage() {
                 ) : null}
               </div>
 
-              <div className="stack-2">
-                <label htmlFor="email" className="label">
-                  Work email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@company.com"
-                  autoComplete="email"
-                  defaultValue={inviteEmail}
-                  disabled={Boolean(inviteEmail && inviteToken)}
-                  className={`input${fieldErrors.email?.[0] ? " input-invalid" : ""}`}
-                />
-                {fieldErrors.email?.[0] ? (
-                  <p className="error-text">{fieldErrors.email[0]}</p>
-                ) : null}
-              </div>
+              <Suspense fallback={<InviteFieldsFallback fieldErrors={fieldErrors} />}>
+                <InviteFields fieldErrors={fieldErrors} />
+              </Suspense>
 
               <div className="stack-2">
                 <label htmlFor="password" className="label">
@@ -153,15 +125,101 @@ export default function SignupPage() {
 
             <p className="muted">This will create a new agency for you</p>
 
-            <div className="row-start">
-              <span className="muted">Already have an account?</span>
-              <Link className="btn-ghost" href={signInHref}>
-                Sign in
-              </Link>
-            </div>
+            <Suspense fallback={<InviteSignInLinkFallback />}>
+              <InviteSignInLink />
+            </Suspense>
           </form>
         </div>
       </div>
     </main>
+  );
+}
+
+function InviteFields({ fieldErrors }: { fieldErrors: FieldErrors }) {
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get("inviteToken") ?? "";
+  const inviteEmail = searchParams.get("email") ?? "";
+
+  return (
+    <>
+      <input type="hidden" name="inviteToken" value={inviteToken} />
+      {inviteEmail && inviteToken ? (
+        <input type="hidden" name="email" value={inviteEmail} />
+      ) : null}
+      <div className="stack-2">
+        <label htmlFor="email" className="label">
+          Work email
+        </label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="you@company.com"
+          autoComplete="email"
+          defaultValue={inviteEmail}
+          disabled={Boolean(inviteEmail && inviteToken)}
+          className={`input${fieldErrors.email?.[0] ? " input-invalid" : ""}`}
+        />
+        {fieldErrors.email?.[0] ? (
+          <p className="error-text">{fieldErrors.email[0]}</p>
+        ) : null}
+      </div>
+    </>
+  );
+}
+
+function InviteFieldsFallback({ fieldErrors }: { fieldErrors: FieldErrors }) {
+  return (
+    <>
+      <input type="hidden" name="inviteToken" value="" />
+      <div className="stack-2">
+        <label htmlFor="email" className="label">
+          Work email
+        </label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="you@company.com"
+          autoComplete="email"
+          className={`input${fieldErrors.email?.[0] ? " input-invalid" : ""}`}
+        />
+        {fieldErrors.email?.[0] ? (
+          <p className="error-text">{fieldErrors.email[0]}</p>
+        ) : null}
+      </div>
+    </>
+  );
+}
+
+function InviteSignInLink() {
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get("inviteToken") ?? "";
+  const inviteEmail = searchParams.get("email") ?? "";
+  const signInParams = new URLSearchParams();
+  if (inviteToken) signInParams.set("inviteToken", inviteToken);
+  if (inviteEmail) signInParams.set("email", inviteEmail);
+  const signInHref = signInParams.toString()
+    ? `/sign-in?${signInParams.toString()}`
+    : "/sign-in";
+
+  return (
+    <div className="row-start">
+      <span className="muted">Already have an account?</span>
+      <Link className="btn-ghost" href={signInHref}>
+        Sign in
+      </Link>
+    </div>
+  );
+}
+
+function InviteSignInLinkFallback() {
+  return (
+    <div className="row-start">
+      <span className="muted">Already have an account?</span>
+      <Link className="btn-ghost" href="/sign-in">
+        Sign in
+      </Link>
+    </div>
   );
 }

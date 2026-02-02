@@ -1,6 +1,8 @@
 import { betterAuth } from "better-auth";
+import type { User as AuthUser } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
+import type { GenericEndpointContext } from "@better-auth/core";
 import { APIError } from "better-call";
 import { Role } from "@/prisma/generated/client";
 import prisma from "@/src/lib/prisma";
@@ -13,7 +15,10 @@ export const authConfig = {
 	databaseHooks: {
 		user: {
 			create: {
-				after: async (user, context) => {
+				after: async (
+					user: AuthUser,
+					context: GenericEndpointContext | null,
+				) => {
 					if (!context?.path?.endsWith("/sign-up/email")) return;
 
 					const agencyName =
