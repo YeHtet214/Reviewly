@@ -64,7 +64,8 @@ export async function signupOwnerAction(
 			}
 			return {
 				ok: false,
-				formError: error.message || "Unable to create account.",
+				formError:
+					error.body?.message || error.message || "Unable to create account.",
 			};
 		}
 

@@ -1,4 +1,5 @@
-import { betterAuth } from "better-auth";
+import { betterAuth, User } from "better-auth";
+import type { GenericEndpointContext } from "@better-auth/core";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { APIError } from "better-call";
@@ -13,7 +14,10 @@ export const authConfig = {
 	databaseHooks: {
 		user: {
 			create: {
-				after: async (user, context) => {
+				after: async (
+					user: User,
+					context: GenericEndpointContext | null,
+				) => {
 					if (!context?.path?.endsWith("/sign-up/email")) return;
 
 					const agencyName =
@@ -53,7 +57,7 @@ export const authConfig = {
 								},
 							});
 						});
-					} catch (error) {
+					} catch {
 						await cleanupUser(user.id);
 						throw new APIError("INTERNAL_SERVER_ERROR", {
 							message: "Unable to create agency",
@@ -64,7 +68,6 @@ export const authConfig = {
 		},
 	},
 	plugins: [nextCookies()],
-	// @ts-ignore - generateId is valid but not in types
 	generateId: () => randomUUID(),
 };
 

@@ -1,11 +1,5 @@
-"use client";
-
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
-import { signInAction } from "./actions";
-
-type FieldErrors = Partial<Record<"email" | "password", string[]>>;
+import { Suspense } from "react";
+import SignInForm from "./sign-in-form";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -139,5 +133,23 @@ export default function SignInPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+function SignInFormFallback() {
+  return (
+    <div className="stack-4">
+      <div className="stack-4">
+        <div className="stack-2">
+          <div className="label">Email</div>
+          <div className="input bg-transparent" aria-hidden="true" />
+        </div>
+        <div className="stack-2">
+          <div className="label">Password</div>
+          <div className="input bg-transparent" aria-hidden="true" />
+        </div>
+      </div>
+      <div className="btn-primary w-full" aria-hidden="true" />
+    </div>
   );
 }
