@@ -88,7 +88,6 @@ export async function createInvite(
         error,
         inviterUserId,
         agencyId,
-        inviteUrl,
       });
       return {
         ok: true,

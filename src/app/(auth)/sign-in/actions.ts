@@ -33,7 +33,6 @@ export async function signInAction(
       },
     });
 
-     const redirectTo = inviteToken
     const redirectTo = inviteToken
       ? `/invite/complete?token=${encodeURIComponent(inviteToken)}`
       : DEFAULT_REDIRECT;
