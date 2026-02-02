@@ -11,8 +11,6 @@ const INVITE_REDIRECT = "/invite/complete";
 export async function signupOwnerAction(
 	formData: FormData,
 ): Promise<SignupActionResult> {
-
- console.log("form email:", formData.get("email"))
 	const raw = {
 		name: String(formData.get("name") || ""),
 		email: String(formData.get("email") || ""),
@@ -49,7 +47,16 @@ export async function signupOwnerAction(
 		return { ok: true, redirectTo };
 	} catch (error) {
 		if (error instanceof APIError) {
-			if ((error as any).code === "ACCOUNT_EXISTS") {
+			const errorBody = (error as any).body as { code?: string } | undefined;
+			const errorCode = errorBody?.code ?? (error as any).code;
+			const errorMessage = String(error.message || "");
+			if (
+				errorCode === "ACCOUNT_EXISTS" ||
+				errorCode === "USER_ALREADY_EXISTS" ||
+				errorCode === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL" ||
+				errorMessage.toLowerCase().includes("already exists") ||
+				errorMessage.toLowerCase().includes("already in use")
+			) {
 				return {
 					ok: false,
 					fieldErrors: { email: ["Email already in use."] },

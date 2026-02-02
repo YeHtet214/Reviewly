@@ -76,12 +76,26 @@ export async function createInvite(
     });
 
     const inviteUrl = buildInviteUrl(token);
-    const emailContent = buildMemberInviteEmail({
-      inviteUrl,
-      agencyName: membership.agency?.name,
-    });
+    let emailContent: ReturnType<typeof buildMemberInviteEmail>;
 
-    console.log("Email content: ", emailContent)
+    try {
+      emailContent = buildMemberInviteEmail({
+        inviteUrl,
+        agencyName: membership.agency?.name,
+      });
+    } catch (error) {
+      console.error("createInvite: unable to build invite email content", {
+        error,
+        inviterUserId,
+        agencyId,
+        inviteUrl,
+      });
+      return {
+        ok: true,
+        inviteUrl,
+        emailError: "Unable to generate invitation email content.",
+      };
+    }
 
     const emailResult = await sendEmail({
       to: email,

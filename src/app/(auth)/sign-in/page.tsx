@@ -30,18 +30,24 @@ export default function SignInPage() {
       setFormError(null);
       setFieldErrors({});
 
-      const result = await signInAction(formData);
+      try {
+        const result = await signInAction(formData);
 
-      if (result.ok) {
-        router.push(result.redirectTo);
-        return;
-      }
+        if (result.ok) {
+          router.push(result.redirectTo);
+          return;
+        }
 
-      if (result.fieldErrors) {
-        setFieldErrors(result.fieldErrors);
-      }
-      if (result.formError) {
-        setFormError(result.formError);
+        if (result.fieldErrors) {
+          setFieldErrors(result.fieldErrors);
+        }
+        if (result.formError) {
+          setFormError(result.formError);
+        }
+      } catch (error) {
+        console.error("Unexpected sign-in error", error);
+        setFieldErrors({});
+        setFormError("Something went wrong. Please try again.");
       }
     });
   }
