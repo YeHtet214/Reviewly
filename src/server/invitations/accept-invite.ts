@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { Role } from "@/prisma/generated/client";
+import { InvitationType, Role } from "@/prisma/generated/client";
 import prisma from "@/src/lib/prisma";
 import { InviteErrorCode } from "./errors";
-import { getValidInvitation } from "./get-invite";
+import { hashInviteToken } from "./token";
 
 type AcceptInviteInput = {
   token: string;
@@ -39,50 +39,51 @@ export async function acceptInvite(
   }
 
   const { token, userId } = parsed.data;
-  const result = await getValidInvitation(token);
-
-  if (!result.ok) {
-    return {
-      ok: false,
-      code: result.code,
-      message: MESSAGE_BY_CODE[result.code] ?? DEFAULT_INVITE_ERROR_MESSAGE,
-    };
-  }
-
-  if (result.invitation.type === "CLIENT") {
-    return {
-      ok: false,
-      code: "NOT_IMPLEMENTED",
-      message: "Client invitations are not supported yet.",
-    };
-  }
-
-  if (!result.invitation.agencyId) {
-    return {
-      ok: false,
-      code: InviteErrorCode.INVALID,
-      message: "Invitation is missing an agency.",
-    };
-  }
-
-  const role = result.invitation.role ?? Role.MEMBER;
   const consumedAt = new Date();
+  const tokenHash = hashInviteToken(token);
+  let consumedInvite: {
+    id: string;
+    agencyId: string | null;
+    role: Role | null;
+    type: InvitationType;
+  } | null = null;
+  let inviteForLog: {
+    id: string;
+    agencyId: string | null;
+    type: InvitationType;
+  } | null = null;
 
   try {
     await prisma.$transaction(async (tx) => {
-      const consumed = await tx.invitation.updateMany({
-        where: { id: result.invitation.id, consumedAt: null },
+      const updated = await tx.invitation.updateManyAndReturn({
+        where: {
+          tokenHash,
+          consumedAt: null,
+          expiresAt: { gte: consumedAt },
+          type: InvitationType.MEMBER,
+          agencyId: { not: null },
+        },
         data: { consumedAt },
+        select: {
+          id: true,
+          agencyId: true,
+          role: true,
+          type: true,
+        },
       });
 
-      if (consumed.count !== 1) {
-        throw new Error(InviteErrorCode.CONSUMED);
+      const invite = updated[0];
+      if (!invite || !invite.agencyId) {
+        return;
       }
+
+      consumedInvite = invite;
+      const role = invite.role ?? Role.MEMBER;
 
       const existingMembership = await tx.membership.findFirst({
         where: {
           userId,
-          agencyId: result.invitation.agencyId!,
+          agencyId: invite.agencyId,
         },
         select: { id: true },
       });
@@ -91,16 +92,80 @@ export async function acceptInvite(
         await tx.membership.create({
           data: {
             userId,
-            agencyId: result.invitation.agencyId!,
+            agencyId: invite.agencyId,
             role,
           },
         });
       }
     });
 
-    return { ok: true };
-  } catch (error) {
-    if (error instanceof Error && error.message === InviteErrorCode.CONSUMED) {
+    if (consumedInvite) {
+      return { ok: true };
+    }
+
+    const invite = await prisma.invitation.findUnique({
+      where: { tokenHash },
+      select: {
+        id: true,
+        type: true,
+        agencyId: true,
+        role: true,
+        expiresAt: true,
+        consumedAt: true,
+      },
+    });
+
+    if (!invite) {
+      return {
+        ok: false,
+        code: InviteErrorCode.NOT_FOUND,
+        message: MESSAGE_BY_CODE[InviteErrorCode.NOT_FOUND],
+      };
+    }
+
+    inviteForLog = {
+      id: invite.id,
+      agencyId: invite.agencyId,
+      type: invite.type,
+    };
+
+    if (invite.expiresAt < consumedAt) {
+      return {
+        ok: false,
+        code: InviteErrorCode.EXPIRED,
+        message: MESSAGE_BY_CODE[InviteErrorCode.EXPIRED],
+      };
+    }
+
+    if (invite.type === InvitationType.CLIENT) {
+      return {
+        ok: false,
+        code: "NOT_IMPLEMENTED",
+        message: "Client invitations are not supported yet.",
+      };
+    }
+
+    if (!invite.agencyId) {
+      return {
+        ok: false,
+        code: InviteErrorCode.INVALID,
+        message: "Invitation is missing an agency.",
+      };
+    }
+
+    if (invite.consumedAt) {
+      const existingMembership = await prisma.membership.findFirst({
+        where: {
+          userId,
+          agencyId: invite.agencyId,
+        },
+        select: { id: true },
+      });
+
+      if (existingMembership) {
+        return { ok: true };
+      }
+
       return {
         ok: false,
         code: InviteErrorCode.CONSUMED,
@@ -108,13 +173,19 @@ export async function acceptInvite(
       };
     }
 
+    return {
+      ok: false,
+      code: InviteErrorCode.INVALID,
+      message: DEFAULT_INVITE_ERROR_MESSAGE,
+    };
+  } catch (error) {
     console.error("acceptInvite: unexpected error", {
       error,
-      inviteId: result.invitation.id,
+      inviteId: consumedInvite?.id ?? inviteForLog?.id ?? null,
       userId,
-      agencyId: result.invitation.agencyId,
-      role,
-      invitationType: result.invitation.type,
+      agencyId: consumedInvite?.agencyId ?? inviteForLog?.agencyId ?? null,
+      role: consumedInvite?.role ?? null,
+      invitationType: consumedInvite?.type ?? inviteForLog?.type ?? null,
     });
 
     return {

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { signupOwnerAction } from "./actions";
 
@@ -11,9 +11,18 @@ type FieldErrors = Partial<
 
 export default function SignupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get("inviteToken") ?? "";
+  const inviteEmail = searchParams.get("email") ?? "";
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [isPending, startTransition] = useTransition();
+  const signInParams = new URLSearchParams();
+  if (inviteToken) signInParams.set("inviteToken", inviteToken);
+  if (inviteEmail) signInParams.set("email", inviteEmail);
+  const signInHref = signInParams.toString()
+    ? `/sign-in?${signInParams.toString()}`
+    : "/sign-in";
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -56,6 +65,10 @@ export default function SignupPage() {
           </header>
 
           <form onSubmit={handleSubmit} className="stack-4">
+            <input type="hidden" name="inviteToken" value={inviteToken} />
+            {inviteEmail && inviteToken ? (
+              <input type="hidden" name="email" value={inviteEmail} />
+            ) : null}
             {formError ? <p className="error-text">{formError}</p> : null}
 
             <div className="stack-4">
@@ -86,6 +99,8 @@ export default function SignupPage() {
                   type="email"
                   placeholder="you@company.com"
                   autoComplete="email"
+                  defaultValue={inviteEmail}
+                  disabled={Boolean(inviteEmail && inviteToken)}
                   className={`input${fieldErrors.email?.[0] ? " input-invalid" : ""}`}
                 />
                 {fieldErrors.email?.[0] ? (
@@ -140,7 +155,7 @@ export default function SignupPage() {
 
             <div className="row-start">
               <span className="muted">Already have an account?</span>
-              <Link className="btn-ghost" href="/sign-in">
+              <Link className="btn-ghost" href={signInHref}>
                 Sign in
               </Link>
             </div>

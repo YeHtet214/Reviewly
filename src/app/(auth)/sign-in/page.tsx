@@ -2,6 +2,50 @@ import { Suspense } from "react";
 import SignInForm from "./sign-in-form";
 
 export default function SignInPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get("inviteToken") ?? "";
+  const inviteEmail = searchParams.get("email") ?? "";
+  const [formError, setFormError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [isPending, startTransition] = useTransition();
+  const signUpParams = new URLSearchParams();
+  if (inviteToken) signUpParams.set("inviteToken", inviteToken);
+  if (inviteEmail) signUpParams.set("email", inviteEmail);
+  const signUpHref = signUpParams.toString()
+    ? `/sign-up?${signUpParams.toString()}`
+    : "/sign-up";
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    startTransition(async () => {
+      setFormError(null);
+      setFieldErrors({});
+
+      try {
+        const result = await signInAction(formData);
+
+        if (result.ok) {
+          router.push(result.redirectTo);
+          return;
+        }
+
+        if (result.fieldErrors) {
+          setFieldErrors(result.fieldErrors);
+        }
+        if (result.formError) {
+          setFormError(result.formError);
+        }
+      } catch (error) {
+        console.error("Unexpected sign-in error", error);
+        setFieldErrors({});
+        setFormError("Something went wrong. Please try again.");
+      }
+    });
+  }
+
   return (
     <main className="auth-shell">
       <div className="auth-card">
@@ -16,9 +60,76 @@ export default function SignInPage() {
             </div>
           </header>
 
-          <Suspense fallback={<SignInFormFallback />}>
-            <SignInForm />
-          </Suspense>
+          <form onSubmit={handleSubmit} className="stack-4">
+            <input type="hidden" name="inviteToken" value={inviteToken} />
+            {inviteEmail && inviteToken ? (
+              <input type="hidden" name="email" value={inviteEmail} />
+            ) : null}
+            {formError ? <p className="error-text">{formError}</p> : null}
+
+            <div className="stack-4">
+              <div className="stack-2">
+                <label htmlFor="email" className="label">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@company.com"
+                  autoComplete="email"
+                  defaultValue={inviteEmail}
+                  disabled={Boolean(inviteEmail && inviteToken)}
+                  className={`input${fieldErrors.email?.[0] ? " input-invalid" : ""}`}
+                />
+                {fieldErrors.email?.[0] ? (
+                  <p className="error-text">{fieldErrors.email[0]}</p>
+                ) : null}
+              </div>
+
+              <div className="stack-2">
+                <div className="row">
+                  <label htmlFor="password" className="label">
+                    Password
+                  </label>
+                  <button
+                    type="button"
+                    className="btn-ghost"
+                    aria-disabled="true"
+                    disabled
+                    title="Password recovery is not available yet"
+                    aria-label="Password recovery is not available yet"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  className={`input${
+                    fieldErrors.password?.[0] ? " input-invalid" : ""
+                  }`}
+                />
+                {fieldErrors.password?.[0] ? (
+                  <p className="error-text">{fieldErrors.password[0]}</p>
+                ) : null}
+              </div>
+            </div>
+
+            <button type="submit" disabled={isPending} className="btn-primary w-full">
+              {isPending ? "Signing in..." : "Sign in"}
+            </button>
+
+            <div className="row-start">
+              <span className="muted">Don&apos;t have an account?</span>
+              <Link className="btn-ghost" href={signUpHref}>
+                Sign up
+              </Link>
+            </div>
+          </form>
         </div>
       </div>
     </main>

@@ -10,6 +10,7 @@ export default function InviteMemberPage() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [inviteUrl, setInviteUrl] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const [emailWarning, setEmailWarning] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -22,6 +23,7 @@ export default function InviteMemberPage() {
       setFieldErrors({});
       setInviteUrl(null);
       setCopyStatus(null);
+      setEmailWarning(null);
 
       try {
         const result = await createInviteAction(formData);
@@ -37,6 +39,7 @@ export default function InviteMemberPage() {
         }
 
         setInviteUrl(result.inviteUrl);
+        setEmailWarning(result.emailError ?? null);
         form.reset();
       } catch (error) {
         console.error("invite member failed", error);
@@ -44,6 +47,7 @@ export default function InviteMemberPage() {
         setFieldErrors({});
         setInviteUrl(null);
         setCopyStatus(null);
+        setEmailWarning(null);
       }
     });
   }
@@ -126,6 +130,9 @@ export default function InviteMemberPage() {
                 <p className="muted">
                   Share this link with the person you want to invite.
                 </p>
+                {emailWarning ? (
+                  <p className="error-text">{emailWarning}</p>
+                ) : null}
               </div>
 
               <div className="stack-2">

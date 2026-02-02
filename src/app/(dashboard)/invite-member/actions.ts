@@ -13,7 +13,7 @@ export type CreateInviteFieldErrors = Partial<
 >;
 
 export type CreateInviteActionResult =
-  | { ok: true; inviteUrl: string }
+  | { ok: true; inviteUrl: string; emailError?: string }
   | { ok: false; fieldErrors?: CreateInviteFieldErrors; formError?: string };
 
 export async function createInviteAction(
@@ -63,7 +63,11 @@ export async function createInviteAction(
       return { ok: false, formError: result.error };
     }
 
-    return { ok: true, inviteUrl: result.inviteUrl };
+    return {
+      ok: true,
+      inviteUrl: result.inviteUrl,
+      emailError: result.emailError,
+    };
   } catch (error) {
     console.error("createInviteAction: unexpected error", { error });
     return { ok: false, formError: "Unable to create invitation." };
