@@ -110,6 +110,16 @@ model Project {
   @@map("project")
 }
 
+model Client {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime
+
+  @@index([email])
+  @@map("client")
+}
+
 model Session {
   id        String   @id @default(cuid())
   expiresAt DateTime
