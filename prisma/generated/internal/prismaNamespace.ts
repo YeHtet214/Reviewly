@@ -390,6 +390,7 @@ export const ModelName = {
   Invitation: 'Invitation',
   Project: 'Project',
   Client: 'Client',
+  ClientProjectAccess: 'ClientProjectAccess',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification'
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "agency" | "user" | "membership" | "invitation" | "project" | "client" | "session" | "account" | "verification"
+    modelProps: "agency" | "user" | "membership" | "invitation" | "project" | "client" | "clientProjectAccess" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -856,6 +857,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ClientProjectAccess: {
+      payload: Prisma.$ClientProjectAccessPayload<ExtArgs>
+      fields: Prisma.ClientProjectAccessFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ClientProjectAccessFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ClientProjectAccessFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload>
+        }
+        findFirst: {
+          args: Prisma.ClientProjectAccessFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ClientProjectAccessFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload>
+        }
+        findMany: {
+          args: Prisma.ClientProjectAccessFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload>[]
+        }
+        create: {
+          args: Prisma.ClientProjectAccessCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload>
+        }
+        createMany: {
+          args: Prisma.ClientProjectAccessCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ClientProjectAccessCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload>[]
+        }
+        delete: {
+          args: Prisma.ClientProjectAccessDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload>
+        }
+        update: {
+          args: Prisma.ClientProjectAccessUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload>
+        }
+        deleteMany: {
+          args: Prisma.ClientProjectAccessDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ClientProjectAccessUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ClientProjectAccessUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload>[]
+        }
+        upsert: {
+          args: Prisma.ClientProjectAccessUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientProjectAccessPayload>
+        }
+        aggregate: {
+          args: Prisma.ClientProjectAccessAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateClientProjectAccess>
+        }
+        groupBy: {
+          args: Prisma.ClientProjectAccessGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClientProjectAccessGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ClientProjectAccessCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClientProjectAccessCountAggregateOutputType> | number
+        }
+      }
+    }
     Session: {
       payload: Prisma.$SessionPayload<ExtArgs>
       fields: Prisma.SessionFieldRefs
@@ -1191,6 +1266,19 @@ export const ClientScalarFieldEnum = {
 export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
 
 
+export const ClientProjectAccessScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  projectId: 'projectId',
+  invitedAt: 'invitedAt',
+  invitedByUserId: 'invitedByUserId',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ClientProjectAccessScalarFieldEnum = (typeof ClientProjectAccessScalarFieldEnum)[keyof typeof ClientProjectAccessScalarFieldEnum]
+
+
 export const SessionScalarFieldEnum = {
   id: 'id',
   expiresAt: 'expiresAt',
@@ -1457,6 +1545,7 @@ export type GlobalOmitConfig = {
   invitation?: Prisma.InvitationOmit
   project?: Prisma.ProjectOmit
   client?: Prisma.ClientOmit
+  clientProjectAccess?: Prisma.ClientProjectAccessOmit
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
