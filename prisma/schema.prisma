@@ -18,21 +18,22 @@ model Agency {
   projects    Project[]
 
   @@map("agency")
-} 
+}
 
 model User {
-  id            String       @id @default(cuid())
-  name          String
-  email         String
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  memberships   Membership[]
-  sentInvitations Invitation[]
-  createdProjects Project[]
+  id                    String                @id @default(cuid())
+  name                  String
+  email                 String
+  emailVerified         Boolean
+  image                 String?
+  createdAt             DateTime
+  updatedAt             DateTime
+  sessions              Session[]
+  accounts              Account[]
+  memberships           Membership[]
+  sentInvitations       Invitation[]
+  createdProjects       Project[]
+  clientProjectAccesses ClientProjectAccess[]
 
   @@unique([email])
   @@map("user")
@@ -103,21 +104,45 @@ model Project {
   createdByUserId String
 
   // relations
-  agency        Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
-  createdByUser User   @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  agency                Agency                @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  createdByUser         User                  @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  clientProjectAccesses ClientProjectAccess[]
 
   @@index([agencyId])
   @@map("project")
 }
 
 model Client {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime
+  id                    String                @id @default(cuid())
+  email                 String                @unique
+  name                  String?
+  createdAt             DateTime
+  clientProjectAccesses ClientProjectAccess[]
 
   @@index([email])
   @@map("client")
+}
+
+model ClientProjectAccess {
+  id        String @id @default(cuid())
+  clientId  String
+  projectId String
+
+  invitedAt       DateTime  @default(now())
+  invitedByUserId String?
+  revokedAt       DateTime?
+
+  createdAt DateTime @default(now())
+
+  client        Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  project       Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  invitedByUser User?   @relation(fields: [invitedByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([clientId, projectId])
+  @@index([projectId])
+  @@index([clientId])
+  @@index([revokedAt])
+  @@map("client_project_access")
 }
 
 model Session {

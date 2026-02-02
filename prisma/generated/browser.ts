@@ -48,6 +48,11 @@ export type Project = Prisma.ProjectModel
  */
 export type Client = Prisma.ClientModel
 /**
+ * Model ClientProjectAccess
+ * 
+ */
+export type ClientProjectAccess = Prisma.ClientProjectAccessModel
+/**
  * Model Session
  * 
  */
