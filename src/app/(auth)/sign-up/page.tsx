@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState, useTransition } from "react";
-import { signupOwnerAction } from "./actions";
+import { signupAction } from "./actions";
 
 type FieldErrors = Partial<
   Record<"name" | "email" | "password" | "agencyName", string[]>
@@ -23,7 +23,7 @@ export default function SignupPage() {
       setFormError(null);
       setFieldErrors({});
 
-      const result = await signupOwnerAction(formData);
+      const result = await signupAction(formData);
 
       if (result.ok) {
         router.push(result.redirectTo);
@@ -99,24 +99,9 @@ export default function SignupPage() {
                 ) : null}
               </div>
 
-              <div className="stack-2">
-                <label htmlFor="agencyName" className="label">
-                  Agency name
-                </label>
-                <input
-                  id="agencyName"
-                  name="agencyName"
-                  type="text"
-                  placeholder="Your agency"
-                  autoComplete="organization"
-                  className={`input${
-                    fieldErrors.agencyName?.[0] ? " input-invalid" : ""
-                  }`}
-                />
-                {fieldErrors.agencyName?.[0] ? (
-                  <p className="error-text">{fieldErrors.agencyName[0]}</p>
-                ) : null}
-              </div>
+              <Suspense fallback={<AgencyNameFieldFallback fieldErrors={fieldErrors} />}>
+                <AgencyNameField fieldErrors={fieldErrors} />
+              </Suspense>
             </div>
 
             <button type="submit" disabled={isPending} className="btn-primary w-full">
@@ -189,6 +174,55 @@ function InviteFieldsFallback({ fieldErrors }: { fieldErrors: FieldErrors }) {
         ) : null}
       </div>
     </>
+  );
+}
+
+function AgencyNameField({ fieldErrors }: { fieldErrors: FieldErrors }) {
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get("inviteToken") ?? "";
+
+  if (inviteToken) {
+    return null;
+  }
+
+  return (
+    <div className="stack-2">
+      <label htmlFor="agencyName" className="label">
+        Agency name
+      </label>
+      <input
+        id="agencyName"
+        name="agencyName"
+        type="text"
+        placeholder="Your agency"
+        autoComplete="organization"
+        className={`input${fieldErrors.agencyName?.[0] ? " input-invalid" : ""}`}
+      />
+      {fieldErrors.agencyName?.[0] ? (
+        <p className="error-text">{fieldErrors.agencyName[0]}</p>
+      ) : null}
+    </div>
+  );
+}
+
+function AgencyNameFieldFallback({ fieldErrors }: { fieldErrors: FieldErrors }) {
+  return (
+    <div className="stack-2">
+      <label htmlFor="agencyName" className="label">
+        Agency name
+      </label>
+      <input
+        id="agencyName"
+        name="agencyName"
+        type="text"
+        placeholder="Your agency"
+        autoComplete="organization"
+        className={`input${fieldErrors.agencyName?.[0] ? " input-invalid" : ""}`}
+      />
+      {fieldErrors.agencyName?.[0] ? (
+        <p className="error-text">{fieldErrors.agencyName[0]}</p>
+      ) : null}
+    </div>
   );
 }
 
