@@ -4,8 +4,9 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import type { GenericEndpointContext } from "@better-auth/core";
 import { APIError } from "better-call";
-import { Role } from "@/prisma/generated/client";
+import { InvitationType, Role } from "@/prisma/generated/client";
 import prisma from "@/src/lib/prisma";
+import { getValidInvitation } from "@/src/server/invitations/get-invite";
 import { randomUUID } from "crypto";
 
 export const authConfig = {
@@ -20,6 +21,31 @@ export const authConfig = {
 					context: GenericEndpointContext | null,
 				) => {
 					if (!context?.path?.endsWith("/sign-up/email")) return;
+
+					const normalizeEmail = (value: unknown) => {
+						if (typeof value !== "string") return "";
+						return value.trim().toLowerCase();
+					};
+
+					const inviteToken =
+						typeof context?.body?.inviteToken === "string"
+							? context.body.inviteToken.trim()
+							: "";
+
+					if (inviteToken) {
+						const inviteResult = await getValidInvitation(inviteToken);
+						if (
+							inviteResult.ok &&
+							inviteResult.invitation.type === InvitationType.MEMBER &&
+							inviteResult.invitation.agencyId
+						) {
+							const inviteEmail = normalizeEmail(inviteResult.invitation.email);
+							const signupEmail = normalizeEmail(context?.body?.email);
+							if (inviteEmail && inviteEmail === signupEmail) {
+								return;
+							}
+						}
+					}
 
 					const agencyName =
 						typeof context?.body?.agencyName === "string"

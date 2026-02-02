@@ -1,14 +1,67 @@
 "use server";
 
 import { APIError } from "better-call";
+import { z } from "zod";
+import { InvitationType, Role } from "@/prisma/generated/client";
 import { auth } from "@/src/lib/auth";
+import prisma from "@/src/lib/prisma";
+import { getValidInvitation } from "@/src/server/invitations/get-invite";
 import { signupOwnerSchema } from "@/src/server/validation/auth";
 import { type SignupActionResult } from "@/src/types/auth";
 
 const DEFAULT_REDIRECT = "/";
-const INVITE_REDIRECT = "/invite/complete";
+const DEFAULT_SIGNUP_ERROR_MESSAGE = "Unable to create account.";
+const DEFAULT_INVITE_ERROR_MESSAGE = "Invite link is invalid or expired.";
 
-export async function signupOwnerAction(
+const normalizedEmailSchema = z.preprocess(
+	(value) => {
+		if (typeof value !== "string") return value;
+		return value.trim().toLowerCase();
+	},
+	z.string().email("Email is invalid"),
+);
+
+const inviteSignupSchema = z.object({
+	name: z.string().min(1, "Name is required"),
+	email: normalizedEmailSchema,
+	password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+const normalizeEmail = (value: string) => value.trim().toLowerCase();
+
+const EMAIL_ALREADY_EXISTS_CODES = new Set([
+	"ACCOUNT_EXISTS",
+	"USER_ALREADY_EXISTS",
+	"USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
+]);
+
+function mapSignupError(error: unknown): SignupActionResult {
+	if (error instanceof APIError) {
+		const errorBody = error.body;
+		const errorCode =
+			typeof errorBody?.code === "string" ? errorBody.code : undefined;
+		const errorMessage = String(error.message || "");
+		if (
+			(errorCode && EMAIL_ALREADY_EXISTS_CODES.has(errorCode)) ||
+			errorMessage.toLowerCase().includes("already exists") ||
+			errorMessage.toLowerCase().includes("already in use")
+		) {
+			return {
+				ok: false,
+				fieldErrors: { email: ["Email already in use."] },
+			};
+		}
+		return {
+			ok: false,
+			formError:
+				error.body?.message || error.message || DEFAULT_SIGNUP_ERROR_MESSAGE,
+		};
+	}
+
+	return { ok: false, formError: DEFAULT_SIGNUP_ERROR_MESSAGE };
+}
+
+export async function signupAction(
 	formData: FormData,
 ): Promise<SignupActionResult> {
 	const raw = {
@@ -19,7 +72,144 @@ export async function signupOwnerAction(
 	};
 	const inviteToken = String(formData.get("inviteToken") || "").trim();
 
-	const parsed = signupOwnerSchema.safeParse(raw);
+	if (inviteToken) {
+		return signupInvite(raw.name, raw.email, raw.password, inviteToken);
+	}
+
+	return signupOwner(raw.name, raw.email, raw.password, raw.agencyName);
+}
+
+async function signupInvite(
+	name: string,
+	email: string,
+	password: string,
+	inviteToken: string,
+): Promise<SignupActionResult> {
+	const inviteParsed = inviteSignupSchema.safeParse({
+		name,
+		email,
+		password,
+	});
+	if (!inviteParsed.success) {
+		return {
+			ok: false,
+			fieldErrors: inviteParsed.error.flatten().fieldErrors,
+		};
+	}
+
+	const inviteResult = await getValidInvitation(inviteToken);
+	if (!inviteResult.ok) {
+		return { ok: false, formError: DEFAULT_INVITE_ERROR_MESSAGE };
+	}
+
+	const invitation = inviteResult.invitation;
+	if (invitation.type !== InvitationType.MEMBER) {
+		return { ok: false, formError: DEFAULT_INVITE_ERROR_MESSAGE };
+	}
+
+	const agencyId = invitation.agencyId;
+	if (!agencyId) {
+		return { ok: false, formError: DEFAULT_INVITE_ERROR_MESSAGE };
+	}
+
+	const normalizedSignupEmail = normalizeEmail(inviteParsed.data.email);
+	const normalizedInviteEmail = normalizeEmail(invitation.email);
+	if (normalizedSignupEmail !== normalizedInviteEmail) {
+		return {
+			ok: false,
+			fieldErrors: { email: ["Email does not match invitation."] },
+		};
+	}
+
+	let userId: string | null = null;
+
+	try {
+		type SignUpEmailBody =
+			NonNullable<Parameters<typeof auth.api.signUpEmail>[0]>["body"] & {
+			inviteToken: string;
+		};
+
+		const body: SignUpEmailBody = {
+			name: inviteParsed.data.name,
+			email: inviteParsed.data.email,
+			password: inviteParsed.data.password,
+			inviteToken,
+		};
+
+		const response = await auth.api.signUpEmail({
+			body,
+		});
+		userId = response?.user?.id ?? null;
+	} catch (error: unknown) {
+		return mapSignupError(error);
+	}
+
+	if (!userId) {
+		return { ok: false, formError: DEFAULT_SIGNUP_ERROR_MESSAGE };
+	}
+
+	const consumedAt = new Date();
+	const role = invitation.role ?? Role.MEMBER;
+
+	try {
+		await prisma.$transaction(async (tx) => {
+			const updated = await tx.invitation.updateMany({
+				where: {
+					id: invitation.id,
+					consumedAt: null,
+					expiresAt: { gte: consumedAt },
+					type: InvitationType.MEMBER,
+					agencyId: { not: null },
+				},
+				data: { consumedAt },
+			});
+
+			if (updated.count === 0) {
+				throw new Error("Invite already consumed.");
+			}
+
+			const existingMembership = await tx.membership.findFirst({
+				where: {
+					userId,
+					agencyId,
+				},
+				select: { id: true },
+			});
+
+			if (!existingMembership) {
+				await tx.membership.create({
+					data: {
+						userId,
+						agencyId,
+						role,
+					},
+				});
+			}
+		});
+	} catch {
+		try {
+			await prisma.user.delete({ where: { id: userId } });
+		} catch (cleanupError) {
+			console.error("signupOwnerAction: invite cleanup failed", cleanupError);
+		}
+		return { ok: false, formError: DEFAULT_INVITE_ERROR_MESSAGE };
+	}
+
+	return { ok: true, redirectTo: DEFAULT_REDIRECT };
+}
+
+async function signupOwner(
+	name: string,
+	email: string,
+	password: string,
+	agencyName: string,
+): Promise<SignupActionResult> {
+	const parsed = signupOwnerSchema.safeParse({
+		name,
+		email,
+		password,
+		agencyName,
+	});
 	if (!parsed.success) {
 		return {
 			ok: false,
@@ -41,35 +231,8 @@ export async function signupOwnerAction(
 
 		await auth.api.signUpEmail({ body });
 
-		const redirectTo = inviteToken
-			? `${INVITE_REDIRECT}?token=${encodeURIComponent(inviteToken)}`
-			: DEFAULT_REDIRECT;
-		return { ok: true, redirectTo };
+		return { ok: true, redirectTo: DEFAULT_REDIRECT };
 	} catch (error: unknown) {
-		if (error instanceof APIError) {
-			const errorBody = error.body;
-			const errorCode =
-				typeof errorBody?.code === "string" ? errorBody.code : undefined;
-			const errorMessage = String(error.message || "");
-			if (
-				errorCode === "ACCOUNT_EXISTS" ||
-				errorCode === "USER_ALREADY_EXISTS" ||
-				errorCode === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL" ||
-				errorMessage.toLowerCase().includes("already exists") ||
-				errorMessage.toLowerCase().includes("already in use")
-			) {
-				return {
-					ok: false,
-					fieldErrors: { email: ["Email already in use."] },
-				};
-			}
-			return {
-				ok: false,
-				formError:
-					error.body?.message || error.message || "Unable to create account.",
-			};
-		}
-
-		return { ok: false, formError: "Unable to create account." };
+		return mapSignupError(error);
 	}
 }
