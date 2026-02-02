@@ -60,6 +60,16 @@ export type Membership = Prisma.MembershipModel
  */
 export type Invitation = Prisma.InvitationModel
 /**
+ * Model Project
+ * 
+ */
+export type Project = Prisma.ProjectModel
+/**
+ * Model Client
+ * 
+ */
+export type Client = Prisma.ClientModel
+/**
  * Model Session
  * 
  */

@@ -55,6 +55,8 @@ export const ModelName = {
   User: 'User',
   Membership: 'Membership',
   Invitation: 'Invitation',
+  Project: 'Project',
+  Client: 'Client',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification'
@@ -124,6 +126,30 @@ export const InvitationScalarFieldEnum = {
 } as const
 
 export type InvitationScalarFieldEnum = (typeof InvitationScalarFieldEnum)[keyof typeof InvitationScalarFieldEnum]
+
+
+export const ProjectScalarFieldEnum = {
+  id: 'id',
+  agencyId: 'agencyId',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  dueAt: 'dueAt',
+  createdByUserId: 'createdByUserId'
+} as const
+
+export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ClientScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  name: 'name',
+  createdAt: 'createdAt'
+} as const
+
+export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {

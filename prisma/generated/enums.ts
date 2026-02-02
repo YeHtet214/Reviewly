@@ -24,3 +24,12 @@ export const InvitationType = {
 } as const
 
 export type InvitationType = (typeof InvitationType)[keyof typeof InvitationType]
+
+
+export const ProjectStatus = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
