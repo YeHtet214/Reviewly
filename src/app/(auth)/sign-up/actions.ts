@@ -17,7 +17,7 @@ export async function signupOwnerAction(
 		password: String(formData.get("password") || ""),
 		agencyName: String(formData.get("agencyName") || ""),
 	};
-	const inviteToken = String(formData.get("inviteToken") || "").trim();	
+	const inviteToken = String(formData.get("inviteToken") || "").trim();
 
 	const parsed = signupOwnerSchema.safeParse(raw);
 	if (!parsed.success) {
@@ -45,10 +45,11 @@ export async function signupOwnerAction(
 			? `${INVITE_REDIRECT}?token=${encodeURIComponent(inviteToken)}`
 			: DEFAULT_REDIRECT;
 		return { ok: true, redirectTo };
-	} catch (error) {
+	} catch (error: unknown) {
 		if (error instanceof APIError) {
-			const errorBody = (error as any).body as { code?: string } | undefined;
-			const errorCode = errorBody?.code ?? (error as any).code;
+			const errorBody = error.body;
+			const errorCode =
+				typeof errorBody?.code === "string" ? errorBody.code : undefined;
 			const errorMessage = String(error.message || "");
 			if (
 				errorCode === "ACCOUNT_EXISTS" ||

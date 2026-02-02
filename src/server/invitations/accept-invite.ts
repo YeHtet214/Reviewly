@@ -47,11 +47,6 @@ export async function acceptInvite(
     role: Role | null;
     type: InvitationType;
   } | null = null;
-  let inviteForLog: {
-    id: string;
-    agencyId: string | null;
-    type: InvitationType;
-  } | null = null;
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -123,12 +118,6 @@ export async function acceptInvite(
       };
     }
 
-    inviteForLog = {
-      id: invite.id,
-      agencyId: invite.agencyId,
-      type: invite.type,
-    };
-
     if (invite.expiresAt < consumedAt) {
       return {
         ok: false,
@@ -178,16 +167,7 @@ export async function acceptInvite(
       code: InviteErrorCode.INVALID,
       message: DEFAULT_INVITE_ERROR_MESSAGE,
     };
-  } catch (error) {
-    console.error("acceptInvite: unexpected error", {
-      error,
-      inviteId: consumedInvite?.id ?? inviteForLog?.id ?? null,
-      userId,
-      agencyId: consumedInvite?.agencyId ?? inviteForLog?.agencyId ?? null,
-      role: consumedInvite?.role ?? null,
-      invitationType: consumedInvite?.type ?? inviteForLog?.type ?? null,
-    });
-
+  } catch {
     return {
       ok: false,
       code: InviteErrorCode.INVALID,
