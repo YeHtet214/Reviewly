@@ -26,7 +26,7 @@ model User {
   email                 String
   emailVerified         Boolean
   image                 String?
-  createdAt             DateTime
+  createdAt             DateTime              @default(now())
   updatedAt             DateTime
   sessions              Session[]
   accounts              Account[]
@@ -101,11 +101,11 @@ model Project {
   status          ProjectStatus
   createdAt       DateTime      @default(now())
   dueAt           DateTime
-  createdByUserId String
+  createdByUserId String 
 
   // relations
   agency                Agency                @relation(fields: [agencyId], references: [id], onDelete: Cascade)
-  createdByUser         User                  @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  createdByUser         User                  @relation(fields: [createdByUserId], references: [id])
   clientProjectAccesses ClientProjectAccess[]
 
   @@index([agencyId])
