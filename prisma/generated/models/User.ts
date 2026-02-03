@@ -273,7 +273,7 @@ export type UserCreateInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -289,7 +289,7 @@ export type UserUncheckedCreateInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -337,7 +337,7 @@ export type UserCreateManyInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
 }
 
@@ -503,7 +503,7 @@ export type UserCreateWithoutMembershipsInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -518,7 +518,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -579,7 +579,7 @@ export type UserCreateWithoutSentInvitationsInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -594,7 +594,7 @@ export type UserUncheckedCreateWithoutSentInvitationsInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -655,7 +655,7 @@ export type UserCreateWithoutCreatedProjectsInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -670,7 +670,7 @@ export type UserUncheckedCreateWithoutCreatedProjectsInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -731,7 +731,7 @@ export type UserCreateWithoutClientProjectAccessesInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -746,7 +746,7 @@ export type UserUncheckedCreateWithoutClientProjectAccessesInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -807,7 +807,7 @@ export type UserCreateWithoutSessionsInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
@@ -822,7 +822,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
@@ -883,7 +883,7 @@ export type UserCreateWithoutAccountsInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
@@ -898,7 +898,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   email: string
   emailVerified: boolean
   image?: string | null
-  createdAt: Date | string
+  createdAt?: Date | string
   updatedAt: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
