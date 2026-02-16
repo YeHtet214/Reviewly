@@ -27,6 +27,14 @@ const optionalAgencyIdSchema = z.preprocess(
   z.string().min(1).optional(),
 );
 
+const projectIdSchema = z.preprocess(
+  (value) => {
+    if (typeof value !== "string") return value;
+    return value.trim();
+  },
+  z.string().min(1, "Project is required"),
+);
+
 export const createInviteSchema = z.object({
   email: normalizedEmailSchema,
   role: roleSchema,
@@ -37,3 +45,10 @@ export const createInviteFormSchema = createInviteSchema.extend({
 });
 
 export type CreateInviteInput = z.infer<typeof createInviteSchema>;
+
+export const createClientInviteSchema = z.object({
+  email: normalizedEmailSchema,
+  projectId: projectIdSchema,
+});
+
+export type CreateClientInviteInput = z.infer<typeof createClientInviteSchema>;
