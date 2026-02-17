@@ -7,6 +7,37 @@ import {
   type CreateClientInviteInput,
 } from "@/src/server/validation/invitations";
 import { createClientInvite } from "@/src/server/invitations/create-client-invite";
+import { getProjectsForInvite } from "@/src/server/invitations/get-projects-for-invite";
+
+export type GetAvailableProjectsResult =
+  | { ok: true; projects: { id: string; name: string }[] }
+  | { ok: false; error: string };
+
+export async function getAvailableProjectsAction(): Promise<GetAvailableProjectsResult> {
+  let session: Awaited<ReturnType<typeof auth.api.getSession>> | null = null;
+
+  try {
+    session = await auth.api.getSession({ headers: await headers() });
+  } catch (error) {
+    console.error("getAvailableProjectsAction: unable to get session", {
+      error,
+    });
+    return {
+      ok: false,
+      error: "You must be signed in to invite a client.",
+    };
+  }
+
+  if (!session?.user?.id) {
+    return {
+      ok: false,
+      error: "You must be signed in to invite a client.",
+    };
+  }
+
+  return getProjectsForInvite(session.user.id);
+}
+
 
 export type CreateClientInviteFieldErrors = Partial<
   Record<keyof CreateClientInviteInput, string[]>
