@@ -100,7 +100,7 @@ model Project {
   description     String
   status          ProjectStatus
   createdAt       DateTime      @default(now())
-  dueAt           DateTime
+  dueAt           DateTime?
   createdByUserId String 
 
   // relations
