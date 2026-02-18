@@ -103,7 +103,10 @@ async function signupInvite(
 	}
 
 	const invitation = inviteResult.invitation;
-	if (invitation.type !== InvitationType.MEMBER) {
+	if (
+		invitation.type !== InvitationType.MEMBER &&
+		invitation.type !== InvitationType.CLIENT
+	) {
 		return { ok: false, formError: DEFAULT_INVITE_ERROR_MESSAGE };
 	}
 
@@ -126,8 +129,8 @@ async function signupInvite(
 	try {
 		type SignUpEmailBody =
 			NonNullable<Parameters<typeof auth.api.signUpEmail>[0]>["body"] & {
-			inviteToken: string;
-		};
+				inviteToken: string;
+			};
 
 		const body: SignUpEmailBody = {
 			name: inviteParsed.data.name,
@@ -158,35 +161,79 @@ async function signupInvite(
 					id: invitation.id,
 					consumedAt: null,
 					expiresAt: { gte: consumedAt },
-					type: InvitationType.MEMBER,
+					type: invitation.type,
 					agencyId: { not: null },
 				},
 				data: { consumedAt },
 			});
 
+			console.log("Invite token is ok:", inviteToken);
+			console.log("Updated count:", updated);
+
 			if (updated.count === 0) {
 				throw new Error("Invite already consumed.");
 			}
 
-			const existingMembership = await tx.membership.findFirst({
-				where: {
-					userId,
-					agencyId,
-				},
-				select: { id: true },
-			});
-
-			if (!existingMembership) {
-				await tx.membership.create({
-					data: {
+			if (invitation.type === InvitationType.MEMBER) {
+				const existingMembership = await tx.membership.findFirst({
+					where: {
 						userId,
 						agencyId,
-						role,
 					},
+					select: { id: true },
+				});
+
+				if (!existingMembership) {
+					await tx.membership.create({
+						data: {
+							userId,
+							agencyId,
+							role,
+						},
+					});
+				}
+			} else if (invitation.type === InvitationType.CLIENT) {
+				if (!invitation.projectId) {
+					throw new Error("Client invitation missing project ID");
+				}
+
+				// Find or create the Client record
+				let client = await tx.client.findUnique({
+					where: { email: normalizedSignupEmail },
+				});
+
+				if (!client) {
+					client = await tx.client.create({
+						data: {
+							email: normalizedSignupEmail,
+							name: inviteParsed.data.name,
+							createdAt: new Date(),
+						},
+					});
+				}
+
+				// Create ClientProjectAccess if it doesn't exist
+				// We use upsert or just create with ignore if possible, but prisma create throws on unique constraint
+				// So we check first or just use upsert
+				await tx.clientProjectAccess.upsert({
+					where: {
+						clientId_projectId: {
+							clientId: client.id,
+							projectId: invitation.projectId,
+						},
+					},
+					create: {
+						clientId: client.id,
+						projectId: invitation.projectId,
+						invitedByUserId: invitation.invitedByUserId,
+						invitedAt: invitation.createdAt,
+					},
+					update: {}, // No update needed if exists
 				});
 			}
 		});
-	} catch {
+	} catch (err) {
+		console.error("signupInvite error:", err);
 		try {
 			await prisma.user.delete({ where: { id: userId } });
 		} catch (cleanupError) {
@@ -220,8 +267,8 @@ async function signupOwner(
 	try {
 		type SignUpEmailBody =
 			NonNullable<Parameters<typeof auth.api.signUpEmail>[0]>["body"] & {
-			agencyName: string;
-		};
+				agencyName: string;
+			};
 		const body: SignUpEmailBody = {
 			name: parsed.data.name,
 			email: parsed.data.email,
@@ -229,10 +276,13 @@ async function signupOwner(
 			agencyName: parsed.data.agencyName,
 		};
 
+		console.log("Sign up body: ", body);
+
 		await auth.api.signUpEmail({ body });
 
 		return { ok: true, redirectTo: DEFAULT_REDIRECT };
 	} catch (error: unknown) {
+		console.log("error", error);
 		return mapSignupError(error);
 	}
 }
