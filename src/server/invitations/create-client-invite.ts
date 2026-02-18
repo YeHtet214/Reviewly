@@ -21,7 +21,7 @@ export type CreateClientInviteResult =
 function buildInviteUrl(token: string): string {
   const baseUrl = process.env.APP_BASE_URL || DEFAULT_BASE_URL;
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
-  return `${normalizedBase}/invite/${token}`;
+  return `${normalizedBase}/client/invite/accept?token=${token}`;
 }
 
 export async function createClientInvite(

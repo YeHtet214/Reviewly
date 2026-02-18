@@ -33,3 +33,14 @@ export const ProjectStatus = {
 } as const
 
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
+
+
+export const ApprovalStatus = {
+  DRAFT: 'DRAFT',
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  OVERDUE: 'OVERDUE'
+} as const
+
+export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus]

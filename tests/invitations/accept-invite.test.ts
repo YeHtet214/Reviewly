@@ -144,29 +144,4 @@ describe("acceptInvite", () => {
     }
   });
 
-  it("returns NOT_IMPLEMENTED for client invites without consuming them", async () => {
-    const user = await createUser();
-    const token = generateInviteToken();
-
-    const invitation = await prisma.invitation.create({
-      data: {
-        type: "CLIENT",
-        email: user.email,
-        tokenHash: hashInviteToken(token),
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60),
-      },
-    });
-
-    const result = await acceptInvite({ token, userId: user.id });
-
-    assert.equal(result.ok, false);
-    if (!result.ok) {
-      assert.equal(result.code, "NOT_IMPLEMENTED");
-    }
-
-    const updatedInvite = await prisma.invitation.findUnique({
-      where: { id: invitation.id },
-    });
-    assert.equal(updatedInvite?.consumedAt, null);
-  });
 });

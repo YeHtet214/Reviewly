@@ -231,6 +231,7 @@ export type InvitationWhereInput = {
   consumedAt?: Prisma.DateTimeNullableFilter<"Invitation"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Invitation"> | Date | string
   agency?: Prisma.XOR<Prisma.AgencyNullableScalarRelationFilter, Prisma.AgencyWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   invitedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -247,6 +248,7 @@ export type InvitationOrderByWithRelationInput = {
   consumedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   agency?: Prisma.AgencyOrderByWithRelationInput
+  project?: Prisma.ProjectOrderByWithRelationInput
   invitedByUser?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -266,6 +268,7 @@ export type InvitationWhereUniqueInput = Prisma.AtLeast<{
   consumedAt?: Prisma.DateTimeNullableFilter<"Invitation"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Invitation"> | Date | string
   agency?: Prisma.XOR<Prisma.AgencyNullableScalarRelationFilter, Prisma.AgencyWhereInput> | null
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   invitedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "tokenHash">
 
@@ -308,12 +311,12 @@ export type InvitationCreateInput = {
   type: $Enums.InvitationType
   email: string
   tokenHash: string
-  projectId?: string | null
   role?: $Enums.Role | null
   expiresAt: Date | string
   consumedAt?: Date | string | null
   createdAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutInvitationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutInvitationsInput
   invitedByUser?: Prisma.UserCreateNestedOneWithoutSentInvitationsInput
 }
 
@@ -336,12 +339,12 @@ export type InvitationUpdateInput = {
   type?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
   email?: Prisma.StringFieldUpdateOperationsInput | string
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutInvitationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutInvitationsNestedInput
   invitedByUser?: Prisma.UserUpdateOneWithoutSentInvitationsNestedInput
 }
 
@@ -378,7 +381,6 @@ export type InvitationUpdateManyMutationInput = {
   type?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
   email?: Prisma.StringFieldUpdateOperationsInput | string
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -547,16 +549,58 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type InvitationCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.InvitationCreateWithoutProjectInput, Prisma.InvitationUncheckedCreateWithoutProjectInput> | Prisma.InvitationCreateWithoutProjectInput[] | Prisma.InvitationUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.InvitationCreateOrConnectWithoutProjectInput | Prisma.InvitationCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.InvitationCreateManyProjectInputEnvelope
+  connect?: Prisma.InvitationWhereUniqueInput | Prisma.InvitationWhereUniqueInput[]
+}
+
+export type InvitationUncheckedCreateNestedManyWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.InvitationCreateWithoutProjectInput, Prisma.InvitationUncheckedCreateWithoutProjectInput> | Prisma.InvitationCreateWithoutProjectInput[] | Prisma.InvitationUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.InvitationCreateOrConnectWithoutProjectInput | Prisma.InvitationCreateOrConnectWithoutProjectInput[]
+  createMany?: Prisma.InvitationCreateManyProjectInputEnvelope
+  connect?: Prisma.InvitationWhereUniqueInput | Prisma.InvitationWhereUniqueInput[]
+}
+
+export type InvitationUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.InvitationCreateWithoutProjectInput, Prisma.InvitationUncheckedCreateWithoutProjectInput> | Prisma.InvitationCreateWithoutProjectInput[] | Prisma.InvitationUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.InvitationCreateOrConnectWithoutProjectInput | Prisma.InvitationCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.InvitationUpsertWithWhereUniqueWithoutProjectInput | Prisma.InvitationUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.InvitationCreateManyProjectInputEnvelope
+  set?: Prisma.InvitationWhereUniqueInput | Prisma.InvitationWhereUniqueInput[]
+  disconnect?: Prisma.InvitationWhereUniqueInput | Prisma.InvitationWhereUniqueInput[]
+  delete?: Prisma.InvitationWhereUniqueInput | Prisma.InvitationWhereUniqueInput[]
+  connect?: Prisma.InvitationWhereUniqueInput | Prisma.InvitationWhereUniqueInput[]
+  update?: Prisma.InvitationUpdateWithWhereUniqueWithoutProjectInput | Prisma.InvitationUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.InvitationUpdateManyWithWhereWithoutProjectInput | Prisma.InvitationUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.InvitationScalarWhereInput | Prisma.InvitationScalarWhereInput[]
+}
+
+export type InvitationUncheckedUpdateManyWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.InvitationCreateWithoutProjectInput, Prisma.InvitationUncheckedCreateWithoutProjectInput> | Prisma.InvitationCreateWithoutProjectInput[] | Prisma.InvitationUncheckedCreateWithoutProjectInput[]
+  connectOrCreate?: Prisma.InvitationCreateOrConnectWithoutProjectInput | Prisma.InvitationCreateOrConnectWithoutProjectInput[]
+  upsert?: Prisma.InvitationUpsertWithWhereUniqueWithoutProjectInput | Prisma.InvitationUpsertWithWhereUniqueWithoutProjectInput[]
+  createMany?: Prisma.InvitationCreateManyProjectInputEnvelope
+  set?: Prisma.InvitationWhereUniqueInput | Prisma.InvitationWhereUniqueInput[]
+  disconnect?: Prisma.InvitationWhereUniqueInput | Prisma.InvitationWhereUniqueInput[]
+  delete?: Prisma.InvitationWhereUniqueInput | Prisma.InvitationWhereUniqueInput[]
+  connect?: Prisma.InvitationWhereUniqueInput | Prisma.InvitationWhereUniqueInput[]
+  update?: Prisma.InvitationUpdateWithWhereUniqueWithoutProjectInput | Prisma.InvitationUpdateWithWhereUniqueWithoutProjectInput[]
+  updateMany?: Prisma.InvitationUpdateManyWithWhereWithoutProjectInput | Prisma.InvitationUpdateManyWithWhereWithoutProjectInput[]
+  deleteMany?: Prisma.InvitationScalarWhereInput | Prisma.InvitationScalarWhereInput[]
+}
+
 export type InvitationCreateWithoutAgencyInput = {
   id?: string
   type: $Enums.InvitationType
   email: string
   tokenHash: string
-  projectId?: string | null
   role?: $Enums.Role | null
   expiresAt: Date | string
   consumedAt?: Date | string | null
   createdAt?: Date | string
+  project?: Prisma.ProjectCreateNestedOneWithoutInvitationsInput
   invitedByUser?: Prisma.UserCreateNestedOneWithoutSentInvitationsInput
 }
 
@@ -621,12 +665,12 @@ export type InvitationCreateWithoutInvitedByUserInput = {
   type: $Enums.InvitationType
   email: string
   tokenHash: string
-  projectId?: string | null
   role?: $Enums.Role | null
   expiresAt: Date | string
   consumedAt?: Date | string | null
   createdAt?: Date | string
   agency?: Prisma.AgencyCreateNestedOneWithoutInvitationsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutInvitationsInput
 }
 
 export type InvitationUncheckedCreateWithoutInvitedByUserInput = {
@@ -668,6 +712,58 @@ export type InvitationUpdateManyWithWhereWithoutInvitedByUserInput = {
   data: Prisma.XOR<Prisma.InvitationUpdateManyMutationInput, Prisma.InvitationUncheckedUpdateManyWithoutInvitedByUserInput>
 }
 
+export type InvitationCreateWithoutProjectInput = {
+  id?: string
+  type: $Enums.InvitationType
+  email: string
+  tokenHash: string
+  role?: $Enums.Role | null
+  expiresAt: Date | string
+  consumedAt?: Date | string | null
+  createdAt?: Date | string
+  agency?: Prisma.AgencyCreateNestedOneWithoutInvitationsInput
+  invitedByUser?: Prisma.UserCreateNestedOneWithoutSentInvitationsInput
+}
+
+export type InvitationUncheckedCreateWithoutProjectInput = {
+  id?: string
+  type: $Enums.InvitationType
+  email: string
+  tokenHash: string
+  agencyId?: string | null
+  role?: $Enums.Role | null
+  invitedByUserId?: string | null
+  expiresAt: Date | string
+  consumedAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type InvitationCreateOrConnectWithoutProjectInput = {
+  where: Prisma.InvitationWhereUniqueInput
+  create: Prisma.XOR<Prisma.InvitationCreateWithoutProjectInput, Prisma.InvitationUncheckedCreateWithoutProjectInput>
+}
+
+export type InvitationCreateManyProjectInputEnvelope = {
+  data: Prisma.InvitationCreateManyProjectInput | Prisma.InvitationCreateManyProjectInput[]
+  skipDuplicates?: boolean
+}
+
+export type InvitationUpsertWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.InvitationWhereUniqueInput
+  update: Prisma.XOR<Prisma.InvitationUpdateWithoutProjectInput, Prisma.InvitationUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.InvitationCreateWithoutProjectInput, Prisma.InvitationUncheckedCreateWithoutProjectInput>
+}
+
+export type InvitationUpdateWithWhereUniqueWithoutProjectInput = {
+  where: Prisma.InvitationWhereUniqueInput
+  data: Prisma.XOR<Prisma.InvitationUpdateWithoutProjectInput, Prisma.InvitationUncheckedUpdateWithoutProjectInput>
+}
+
+export type InvitationUpdateManyWithWhereWithoutProjectInput = {
+  where: Prisma.InvitationScalarWhereInput
+  data: Prisma.XOR<Prisma.InvitationUpdateManyMutationInput, Prisma.InvitationUncheckedUpdateManyWithoutProjectInput>
+}
+
 export type InvitationCreateManyAgencyInput = {
   id?: string
   type: $Enums.InvitationType
@@ -686,11 +782,11 @@ export type InvitationUpdateWithoutAgencyInput = {
   type?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
   email?: Prisma.StringFieldUpdateOperationsInput | string
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneWithoutInvitationsNestedInput
   invitedByUser?: Prisma.UserUpdateOneWithoutSentInvitationsNestedInput
 }
 
@@ -738,12 +834,12 @@ export type InvitationUpdateWithoutInvitedByUserInput = {
   type?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
   email?: Prisma.StringFieldUpdateOperationsInput | string
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
-  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agency?: Prisma.AgencyUpdateOneWithoutInvitationsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutInvitationsNestedInput
 }
 
 export type InvitationUncheckedUpdateWithoutInvitedByUserInput = {
@@ -772,6 +868,58 @@ export type InvitationUncheckedUpdateManyWithoutInvitedByUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type InvitationCreateManyProjectInput = {
+  id?: string
+  type: $Enums.InvitationType
+  email: string
+  tokenHash: string
+  agencyId?: string | null
+  role?: $Enums.Role | null
+  invitedByUserId?: string | null
+  expiresAt: Date | string
+  consumedAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type InvitationUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  agency?: Prisma.AgencyUpdateOneWithoutInvitationsNestedInput
+  invitedByUser?: Prisma.UserUpdateOneWithoutSentInvitationsNestedInput
+}
+
+export type InvitationUncheckedUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  invitedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type InvitationUncheckedUpdateManyWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
+  invitedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  consumedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 
 
 export type InvitationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -787,6 +935,7 @@ export type InvitationSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   consumedAt?: boolean
   createdAt?: boolean
   agency?: boolean | Prisma.Invitation$agencyArgs<ExtArgs>
+  project?: boolean | Prisma.Invitation$projectArgs<ExtArgs>
   invitedByUser?: boolean | Prisma.Invitation$invitedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["invitation"]>
 
@@ -803,6 +952,7 @@ export type InvitationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   consumedAt?: boolean
   createdAt?: boolean
   agency?: boolean | Prisma.Invitation$agencyArgs<ExtArgs>
+  project?: boolean | Prisma.Invitation$projectArgs<ExtArgs>
   invitedByUser?: boolean | Prisma.Invitation$invitedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["invitation"]>
 
@@ -819,6 +969,7 @@ export type InvitationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   consumedAt?: boolean
   createdAt?: boolean
   agency?: boolean | Prisma.Invitation$agencyArgs<ExtArgs>
+  project?: boolean | Prisma.Invitation$projectArgs<ExtArgs>
   invitedByUser?: boolean | Prisma.Invitation$invitedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["invitation"]>
 
@@ -839,14 +990,17 @@ export type InvitationSelectScalar = {
 export type InvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "email" | "tokenHash" | "agencyId" | "projectId" | "role" | "invitedByUserId" | "expiresAt" | "consumedAt" | "createdAt", ExtArgs["result"]["invitation"]>
 export type InvitationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agency?: boolean | Prisma.Invitation$agencyArgs<ExtArgs>
+  project?: boolean | Prisma.Invitation$projectArgs<ExtArgs>
   invitedByUser?: boolean | Prisma.Invitation$invitedByUserArgs<ExtArgs>
 }
 export type InvitationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agency?: boolean | Prisma.Invitation$agencyArgs<ExtArgs>
+  project?: boolean | Prisma.Invitation$projectArgs<ExtArgs>
   invitedByUser?: boolean | Prisma.Invitation$invitedByUserArgs<ExtArgs>
 }
 export type InvitationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   agency?: boolean | Prisma.Invitation$agencyArgs<ExtArgs>
+  project?: boolean | Prisma.Invitation$projectArgs<ExtArgs>
   invitedByUser?: boolean | Prisma.Invitation$invitedByUserArgs<ExtArgs>
 }
 
@@ -854,6 +1008,7 @@ export type $InvitationPayload<ExtArgs extends runtime.Types.Extensions.Internal
   name: "Invitation"
   objects: {
     agency: Prisma.$AgencyPayload<ExtArgs> | null
+    project: Prisma.$ProjectPayload<ExtArgs> | null
     invitedByUser: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1263,6 +1418,7 @@ readonly fields: InvitationFieldRefs;
 export interface Prisma__InvitationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   agency<T extends Prisma.Invitation$agencyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invitation$agencyArgs<ExtArgs>>): Prisma.Prisma__AgencyClient<runtime.Types.Result.GetResult<Prisma.$AgencyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.Invitation$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invitation$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   invitedByUser<T extends Prisma.Invitation$invitedByUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invitation$invitedByUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1716,6 +1872,25 @@ export type Invitation$agencyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.AgencyInclude<ExtArgs> | null
   where?: Prisma.AgencyWhereInput
+}
+
+/**
+ * Invitation.project
+ */
+export type Invitation$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
 }
 
 /**

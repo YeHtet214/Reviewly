@@ -9,12 +9,11 @@ import { acceptInviteAction } from "./actions";
 const SIGN_IN_PATH = "/sign-in";
 const DEFAULT_INVITE_ERROR_MESSAGE = "Invite link is invalid or expired.";
 
-const MESSAGE_BY_CODE: Record<InviteErrorCode | "NOT_IMPLEMENTED", string> = {
+const MESSAGE_BY_CODE: Record<InviteErrorCode, string> = {
   [InviteErrorCode.NOT_FOUND]: "Invite link was not found.",
   [InviteErrorCode.EXPIRED]: "Invite link has expired.",
   [InviteErrorCode.CONSUMED]: "Invite link has already been used.",
   [InviteErrorCode.INVALID]: "Invite link is invalid.",
-  NOT_IMPLEMENTED: "Client invitations are not supported yet.",
 };
 
 function InviteError({ title, message }: { title: string; message: string }) {
@@ -89,15 +88,6 @@ export default async function InviteCompletePage({
         message={
           MESSAGE_BY_CODE[inviteResult.code] ?? DEFAULT_INVITE_ERROR_MESSAGE
         }
-      />
-    );
-  }
-
-  if (inviteResult.invitation.type === "CLIENT") {
-    return (
-      <InviteError
-        title="Invite not supported"
-        message={MESSAGE_BY_CODE.NOT_IMPLEMENTED}
       />
     );
   }

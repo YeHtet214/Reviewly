@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/src/components/ui/card";
 import { Button } from "@/src/components/ui/button";
+import { redirect } from "next/navigation";
 import { getValidInvitation } from "@/src/server/invitations/get-invite";
 import { continueInviteAction, goToSignInAction } from "./actions";
 
@@ -20,6 +21,12 @@ export default async function InvitePage({
 }) {
   const { token } = await params;
   const result = await getValidInvitation(token);
+
+  // CLIENT invites are handled by the client portal — redirect immediately
+  if (result.ok && result.invitation.type === "CLIENT") {
+    redirect(`/client/invite/accept?token=${encodeURIComponent(token)}`);
+  }
+
   const title = result.ok
     ? "You're invited"
     : "Invite link is invalid or expired";

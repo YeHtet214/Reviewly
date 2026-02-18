@@ -389,11 +389,14 @@ export const ModelName = {
   Membership: 'Membership',
   Invitation: 'Invitation',
   Project: 'Project',
+  ApprovalItem: 'ApprovalItem',
   Client: 'Client',
   ClientProjectAccess: 'ClientProjectAccess',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  ClientSession: 'ClientSession',
+  ClientLoginLink: 'ClientLoginLink'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "agency" | "user" | "membership" | "invitation" | "project" | "client" | "clientProjectAccess" | "session" | "account" | "verification"
+    modelProps: "agency" | "user" | "membership" | "invitation" | "project" | "approvalItem" | "client" | "clientProjectAccess" | "session" | "account" | "verification" | "clientSession" | "clientLoginLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -783,6 +786,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ApprovalItem: {
+      payload: Prisma.$ApprovalItemPayload<ExtArgs>
+      fields: Prisma.ApprovalItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ApprovalItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ApprovalItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload>
+        }
+        findFirst: {
+          args: Prisma.ApprovalItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ApprovalItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload>
+        }
+        findMany: {
+          args: Prisma.ApprovalItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload>[]
+        }
+        create: {
+          args: Prisma.ApprovalItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload>
+        }
+        createMany: {
+          args: Prisma.ApprovalItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ApprovalItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload>[]
+        }
+        delete: {
+          args: Prisma.ApprovalItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload>
+        }
+        update: {
+          args: Prisma.ApprovalItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.ApprovalItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ApprovalItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ApprovalItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.ApprovalItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalItemPayload>
+        }
+        aggregate: {
+          args: Prisma.ApprovalItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateApprovalItem>
+        }
+        groupBy: {
+          args: Prisma.ApprovalItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ApprovalItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ApprovalItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ApprovalItemCountAggregateOutputType> | number
+        }
+      }
+    }
     Client: {
       payload: Prisma.$ClientPayload<ExtArgs>
       fields: Prisma.ClientFieldRefs
@@ -1153,6 +1230,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ClientSession: {
+      payload: Prisma.$ClientSessionPayload<ExtArgs>
+      fields: Prisma.ClientSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ClientSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ClientSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.ClientSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ClientSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload>
+        }
+        findMany: {
+          args: Prisma.ClientSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload>[]
+        }
+        create: {
+          args: Prisma.ClientSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload>
+        }
+        createMany: {
+          args: Prisma.ClientSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ClientSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.ClientSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload>
+        }
+        update: {
+          args: Prisma.ClientSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ClientSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ClientSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ClientSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ClientSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.ClientSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateClientSession>
+        }
+        groupBy: {
+          args: Prisma.ClientSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClientSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ClientSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClientSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    ClientLoginLink: {
+      payload: Prisma.$ClientLoginLinkPayload<ExtArgs>
+      fields: Prisma.ClientLoginLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ClientLoginLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ClientLoginLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.ClientLoginLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ClientLoginLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload>
+        }
+        findMany: {
+          args: Prisma.ClientLoginLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload>[]
+        }
+        create: {
+          args: Prisma.ClientLoginLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload>
+        }
+        createMany: {
+          args: Prisma.ClientLoginLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ClientLoginLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.ClientLoginLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload>
+        }
+        update: {
+          args: Prisma.ClientLoginLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.ClientLoginLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ClientLoginLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ClientLoginLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.ClientLoginLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ClientLoginLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.ClientLoginLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateClientLoginLink>
+        }
+        groupBy: {
+          args: Prisma.ClientLoginLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClientLoginLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ClientLoginLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ClientLoginLinkCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1256,6 +1481,19 @@ export const ProjectScalarFieldEnum = {
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
 
 
+export const ApprovalItemScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  dueAt: 'dueAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ApprovalItemScalarFieldEnum = (typeof ApprovalItemScalarFieldEnum)[keyof typeof ApprovalItemScalarFieldEnum]
+
+
 export const ClientScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -1322,6 +1560,30 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const ClientSessionScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  revokedAt: 'revokedAt'
+} as const
+
+export type ClientSessionScalarFieldEnum = (typeof ClientSessionScalarFieldEnum)[keyof typeof ClientSessionScalarFieldEnum]
+
+
+export const ClientLoginLinkScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ClientLoginLinkScalarFieldEnum = (typeof ClientLoginLinkScalarFieldEnum)[keyof typeof ClientLoginLinkScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1428,6 +1690,20 @@ export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'ProjectStatus[]'
  */
 export type ListEnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ApprovalStatus'
+ */
+export type EnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ApprovalStatus[]'
+ */
+export type ListEnumApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalStatus[]'>
     
 
 
@@ -1544,11 +1820,14 @@ export type GlobalOmitConfig = {
   membership?: Prisma.MembershipOmit
   invitation?: Prisma.InvitationOmit
   project?: Prisma.ProjectOmit
+  approvalItem?: Prisma.ApprovalItemOmit
   client?: Prisma.ClientOmit
   clientProjectAccess?: Prisma.ClientProjectAccessOmit
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  clientSession?: Prisma.ClientSessionOmit
+  clientLoginLink?: Prisma.ClientLoginLinkOmit
 }
 
 /* Types for Logging */
