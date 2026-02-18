@@ -56,6 +56,14 @@ enum ProjectStatus {
   ARCHIVED
 }
 
+enum ApprovalStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+  OVERDUE
+}
+
 model Membership {
   id       String   @id @default(cuid())
   userId   String
@@ -107,9 +115,28 @@ model Project {
   agency                Agency                @relation(fields: [agencyId], references: [id], onDelete: Cascade)
   createdByUser         User                  @relation(fields: [createdByUserId], references: [id])
   clientProjectAccesses ClientProjectAccess[]
+  approvalItems         ApprovalItem[]
 
   @@index([agencyId])
   @@map("project")
+}
+
+model ApprovalItem {
+  id          String         @id @default(cuid())
+  projectId   String
+  title       String
+  description String?
+  status      ApprovalStatus @default(DRAFT)
+  dueAt       DateTime?
+  createdAt   DateTime       @default(now())
+
+  // relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([status])
+  @@index([dueAt])
+  @@map("approval_item")
 }
 
 model Client {
