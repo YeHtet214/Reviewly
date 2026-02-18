@@ -1,45 +1,18 @@
+import {
+  type EmailContent,
+  buildBaseHtml,
+  escapeHtml,
+  normalizeInviteUrl,
+} from "./utils";
+
 type BuildMemberInviteEmailInput = {
   inviteUrl: string;
   agencyName?: string | null;
 };
 
-type MemberInviteEmail = {
-  subject: string;
-  text: string;
-  html: string;
-};
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function normalizeInviteUrl(inviteUrl: string): string {
-  let parsedUrl: URL;
-
-  try {
-    parsedUrl = new URL(inviteUrl.trim());
-  } catch {
-    throw new Error("Invite URL must be a valid https:// URL.");
-  }
-
-// temporary disable for localhost
-  // if (parsedUrl.protocol === "http:") {
-  //   parsedUrl.protocol = "https:";
-  // } else if (parsedUrl.protocol !== "https:") {
-  //   throw new Error("Invite URL must use https://.");
-  // }
-
-  return parsedUrl.toString();
-}
-
 export function buildMemberInviteEmail(
   input: BuildMemberInviteEmailInput,
-): MemberInviteEmail {
+): EmailContent {
   const agencyName = input.agencyName?.trim();
   const validatedInviteUrl = normalizeInviteUrl(input.inviteUrl);
   const safeInviteUrl = escapeHtml(validatedInviteUrl);
@@ -57,23 +30,11 @@ export function buildMemberInviteEmail(
 
   const text = `${introText}\n\nAccept your invitation here:\n${validatedInviteUrl}\n\nIf you did not expect this, you can ignore this email.`;
 
-  const html = `
-    <div style="font-family: Arial, sans-serif; line-height: 1.5;">
-      <p>${introHtml}</p>
-      <p>
-        <a href="${safeInviteUrl}">Accept your invitation</a>
-      </p>
-      <p style="font-size: 14px; color: #555;">
-        If the button doesn't work, copy and paste this link into your browser:
-      </p>
-      <p style="font-size: 14px; color: #555;">
-        ${safeInviteUrl}
-      </p>
-      <p style="font-size: 14px; color: #555;">
-        If you did not expect this, you can ignore this email.
-      </p>
-    </div>
-  `;
+  const html = buildBaseHtml({
+    introHtml,
+    actionUrl: safeInviteUrl,
+    actionText: "Accept your invitation",
+  });
 
   return { subject, text, html };
 }
