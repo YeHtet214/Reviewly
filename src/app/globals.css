@@ -264,6 +264,40 @@
 		cursor: not-allowed;
 	}
 
+	.textarea {
+		width: 100%;
+		min-height: 88px;
+		padding: 10px 14px;
+		border-radius: var(--radius-md);
+		border: 1px solid rgb(var(--border));
+		background: rgb(var(--muted));
+		color: rgb(var(--text));
+		font-size: var(--text-sm);
+		line-height: var(--leading-normal);
+		resize: vertical;
+		transition:
+			border-color 0.15s ease,
+			box-shadow 0.15s ease,
+			background 0.15s ease;
+	}
+
+	.textarea::placeholder {
+		color: rgb(var(--text-3));
+	}
+
+	.textarea:focus {
+		background: rgb(var(--surface));
+		border-color: rgb(var(--brand-500));
+		box-shadow: 0 0 0 4px var(--ring);
+		outline: none;
+	}
+
+	.textarea.input-invalid {
+		border-color: rgb(var(--danger));
+		box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.18);
+		background: rgb(var(--surface));
+	}
+
 	/* Buttons */
 	.btn,
 	.btn-primary,
