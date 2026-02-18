@@ -172,7 +172,7 @@ export type ProjectGroupByOutputType = {
   description: string
   status: $Enums.ProjectStatus
   createdAt: Date
-  dueAt: Date
+  dueAt: Date | null
   createdByUserId: string
   _count: ProjectCountAggregateOutputType | null
   _min: ProjectMinAggregateOutputType | null
@@ -204,7 +204,7 @@ export type ProjectWhereInput = {
   description?: Prisma.StringFilter<"Project"> | string
   status?: Prisma.EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
-  dueAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  dueAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   createdByUserId?: Prisma.StringFilter<"Project"> | string
   agency?: Prisma.XOR<Prisma.AgencyScalarRelationFilter, Prisma.AgencyWhereInput>
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -218,7 +218,7 @@ export type ProjectOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  dueAt?: Prisma.SortOrder
+  dueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   agency?: Prisma.AgencyOrderByWithRelationInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
@@ -235,7 +235,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Project"> | string
   status?: Prisma.EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
-  dueAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  dueAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   createdByUserId?: Prisma.StringFilter<"Project"> | string
   agency?: Prisma.XOR<Prisma.AgencyScalarRelationFilter, Prisma.AgencyWhereInput>
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -249,7 +249,7 @@ export type ProjectOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  dueAt?: Prisma.SortOrder
+  dueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
   _max?: Prisma.ProjectMaxOrderByAggregateInput
@@ -266,7 +266,7 @@ export type ProjectScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"Project"> | string
   status?: Prisma.EnumProjectStatusWithAggregatesFilter<"Project"> | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
-  dueAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
+  dueAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   createdByUserId?: Prisma.StringWithAggregatesFilter<"Project"> | string
 }
 
@@ -276,7 +276,7 @@ export type ProjectCreateInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   agency: Prisma.AgencyCreateNestedOneWithoutProjectsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
   clientProjectAccesses?: Prisma.ClientProjectAccessCreateNestedManyWithoutProjectInput
@@ -289,7 +289,7 @@ export type ProjectUncheckedCreateInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUserId: string
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedCreateNestedManyWithoutProjectInput
 }
@@ -300,7 +300,7 @@ export type ProjectUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agency?: Prisma.AgencyUpdateOneRequiredWithoutProjectsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
   clientProjectAccesses?: Prisma.ClientProjectAccessUpdateManyWithoutProjectNestedInput
@@ -313,7 +313,7 @@ export type ProjectUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedUpdateManyWithoutProjectNestedInput
 }
@@ -325,7 +325,7 @@ export type ProjectCreateManyInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUserId: string
 }
 
@@ -335,7 +335,7 @@ export type ProjectUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ProjectUncheckedUpdateManyInput = {
@@ -345,7 +345,7 @@ export type ProjectUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -505,7 +505,7 @@ export type ProjectCreateWithoutAgencyInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
   clientProjectAccesses?: Prisma.ClientProjectAccessCreateNestedManyWithoutProjectInput
 }
@@ -516,7 +516,7 @@ export type ProjectUncheckedCreateWithoutAgencyInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUserId: string
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedCreateNestedManyWithoutProjectInput
 }
@@ -557,7 +557,7 @@ export type ProjectScalarWhereInput = {
   description?: Prisma.StringFilter<"Project"> | string
   status?: Prisma.EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
-  dueAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  dueAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   createdByUserId?: Prisma.StringFilter<"Project"> | string
 }
 
@@ -567,7 +567,7 @@ export type ProjectCreateWithoutCreatedByUserInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   agency: Prisma.AgencyCreateNestedOneWithoutProjectsInput
   clientProjectAccesses?: Prisma.ClientProjectAccessCreateNestedManyWithoutProjectInput
 }
@@ -579,7 +579,7 @@ export type ProjectUncheckedCreateWithoutCreatedByUserInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedCreateNestedManyWithoutProjectInput
 }
 
@@ -615,7 +615,7 @@ export type ProjectCreateWithoutClientProjectAccessesInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   agency: Prisma.AgencyCreateNestedOneWithoutProjectsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
 }
@@ -627,7 +627,7 @@ export type ProjectUncheckedCreateWithoutClientProjectAccessesInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUserId: string
 }
 
@@ -653,7 +653,7 @@ export type ProjectUpdateWithoutClientProjectAccessesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agency?: Prisma.AgencyUpdateOneRequiredWithoutProjectsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
 }
@@ -665,7 +665,7 @@ export type ProjectUncheckedUpdateWithoutClientProjectAccessesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -675,7 +675,7 @@ export type ProjectCreateManyAgencyInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUserId: string
 }
 
@@ -685,7 +685,7 @@ export type ProjectUpdateWithoutAgencyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
   clientProjectAccesses?: Prisma.ClientProjectAccessUpdateManyWithoutProjectNestedInput
 }
@@ -696,7 +696,7 @@ export type ProjectUncheckedUpdateWithoutAgencyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedUpdateManyWithoutProjectNestedInput
 }
@@ -707,7 +707,7 @@ export type ProjectUncheckedUpdateManyWithoutAgencyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -718,7 +718,7 @@ export type ProjectCreateManyCreatedByUserInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
 }
 
 export type ProjectUpdateWithoutCreatedByUserInput = {
@@ -727,7 +727,7 @@ export type ProjectUpdateWithoutCreatedByUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agency?: Prisma.AgencyUpdateOneRequiredWithoutProjectsNestedInput
   clientProjectAccesses?: Prisma.ClientProjectAccessUpdateManyWithoutProjectNestedInput
 }
@@ -739,7 +739,7 @@ export type ProjectUncheckedUpdateWithoutCreatedByUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedUpdateManyWithoutProjectNestedInput
 }
 
@@ -750,7 +750,7 @@ export type ProjectUncheckedUpdateManyWithoutCreatedByUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -866,7 +866,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     description: string
     status: $Enums.ProjectStatus
     createdAt: Date
-    dueAt: Date
+    dueAt: Date | null
     createdByUserId: string
   }, ExtArgs["result"]["project"]>
   composites: {}

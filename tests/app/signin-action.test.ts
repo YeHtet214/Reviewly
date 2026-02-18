@@ -2,7 +2,7 @@ import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import prisma from "@/src/lib/prisma";
 import { auth } from "@/src/lib/auth";
-import { signInAction } from "@/src/app/(auth)/sign-in/actions";
+import { signInAction } from "@/src/app/auth/sign-in/actions";
 
 let dbAvailable: boolean | null = null;
 
