@@ -1,7 +1,7 @@
 import { InvitationType, Role } from "@/prisma/generated/client";
 import prisma from "@/src/lib/prisma";
 import { sendEmail } from "@/src/server/email/ses";
-import { buildClientInviteEmail } from "@/src/server/email/templates/client-invite";
+import { buildClientInviteEmail } from "@/src/server/email/templates";
 import { generateInviteToken, hashInviteToken } from "./token";
 
 const INVITE_EXPIRATION_DAYS = 7;
