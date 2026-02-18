@@ -34,15 +34,21 @@ export const authConfig = {
 
 					if (inviteToken) {
 						const inviteResult = await getValidInvitation(inviteToken);
-						if (
-							inviteResult.ok &&
-							inviteResult.invitation.type === InvitationType.MEMBER &&
-							inviteResult.invitation.agencyId
-						) {
+						if (inviteResult.ok) {
 							const inviteEmail = normalizeEmail(inviteResult.invitation.email);
 							const signupEmail = normalizeEmail(context?.body?.email);
+
 							if (inviteEmail && inviteEmail === signupEmail) {
-								return;
+								if (
+									inviteResult.invitation.type === InvitationType.MEMBER &&
+									inviteResult.invitation.agencyId
+								) {
+									return;
+								}
+
+								if (inviteResult.invitation.type === InvitationType.CLIENT) {
+									return;
+								}
 							}
 						}
 					}

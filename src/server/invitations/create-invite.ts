@@ -1,7 +1,7 @@
 import { InvitationType, Role } from "@/prisma/generated/client";
 import prisma from "@/src/lib/prisma";
 import { sendEmail } from "@/src/server/email/ses";
-import { buildMemberInviteEmail } from "@/src/server/email/templates/member-invite";
+import { buildMemberInviteEmail } from "@/src/server/email/templates";
 import { generateInviteToken, hashInviteToken } from "./token";
 
 const INVITE_EXPIRATION_DAYS = 7;
@@ -34,21 +34,21 @@ export async function createInvite(
   try {
     const membership = agencyId
       ? await prisma.membership.findFirst({
-          where: {
-            userId: inviterUserId,
-            agencyId,
-            role: { in: INVITE_PERMISSION_ROLES },
-          },
-          select: { agencyId: true, agency: { select: { name: true } } },
-        })
+        where: {
+          userId: inviterUserId,
+          agencyId,
+          role: { in: INVITE_PERMISSION_ROLES },
+        },
+        select: { agencyId: true, agency: { select: { name: true } } },
+      })
       : await prisma.membership.findFirst({
-          where: {
-            userId: inviterUserId,
-            role: { in: INVITE_PERMISSION_ROLES },
-          },
-          orderBy: { joinedAt: "asc" },
-          select: { agencyId: true, agency: { select: { name: true } } },
-        });
+        where: {
+          userId: inviterUserId,
+          role: { in: INVITE_PERMISSION_ROLES },
+        },
+        orderBy: { joinedAt: "asc" },
+        select: { agencyId: true, agency: { select: { name: true } } },
+      });
 
     if (!membership) {
       return {

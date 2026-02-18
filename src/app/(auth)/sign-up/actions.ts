@@ -71,10 +71,13 @@ export async function signupAction(
 		agencyName: String(formData.get("agencyName") || ""),
 	};
 	const inviteToken = String(formData.get("inviteToken") || "").trim();
-
+	console.log("INVITE TOKEN: ", inviteToken);
 	if (inviteToken) {
 		return signupInvite(raw.name, raw.email, raw.password, inviteToken);
 	}
+
+	console.log("NO token considered");
+
 
 	return signupOwner(raw.name, raw.email, raw.password, raw.agencyName);
 }
