@@ -18,6 +18,7 @@ export async function getClientAuthContext(
   try {
     tokenHash = hashClientToken(rawToken);
   } catch {
+    console.error("Failed to hash client token");
     return null;
   }
 
