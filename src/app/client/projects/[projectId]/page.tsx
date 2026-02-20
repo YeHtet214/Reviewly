@@ -8,18 +8,47 @@ import prisma from "@/src/lib/prisma";
 import { logoutAction } from "@/src/app/client/logout/actions";
 import { Button } from "@/src/components/ui/button";
 import { ApprovalStatus } from "@/prisma/generated/client";
+import { approveItemAction, rejectItemAction } from "./actions";
+import { getApprovalItemsForClient } from "@/src/server/approval-items/get-approval-items";
+import type { ComputedStatus } from "@/src/server/approval-items/get-approval-items";
 
-function statusBadgeClass(status: ApprovalStatus): string {
+function statusBadgeClass(status: ComputedStatus): string {
   switch (status) {
     case ApprovalStatus.APPROVED:
       return "badge badge-approved";
     case ApprovalStatus.PENDING:
       return "badge badge-pending";
     case ApprovalStatus.REJECTED:
-      return "badge badge-rejected";
+      return "badge badge-overdue";
+    case "OVERDUE":
+      return "badge badge-overdue";
     default:
       return "badge badge-role";
   }
+}
+
+function statusLabel(status: ComputedStatus): string {
+  switch (status) {
+    case ApprovalStatus.PENDING:
+      return "Pending";
+    case ApprovalStatus.APPROVED:
+      return "Approved";
+    case ApprovalStatus.REJECTED:
+      return "Rejected";
+    case "OVERDUE":
+      return "Overdue";
+    default:
+      return String(status);
+  }
+}
+
+function formatDate(date: Date | null): string {
+  if (!date) return "—";
+  return date.toLocaleDateString("en-AU", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 export default async function ClientProjectPage({
@@ -77,22 +106,15 @@ export default async function ClientProjectPage({
       status: true,
       dueAt: true,
       createdAt: true,
-      approvalItems: {
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          status: true,
-          dueAt: true,
-        },
-        orderBy: { createdAt: "desc" },
-      },
     },
   });
 
   if (!project) {
     notFound();
   }
+
+  // Fetch approval items — DRAFT excluded, OVERDUE computed
+  const approvalItems = await getApprovalItemsForClient(projectId);
 
   return (
     <main className="app-container">
@@ -116,25 +138,50 @@ export default async function ClientProjectPage({
 
         <section className="stack-4">
           <h2 className="section-title">Approval items</h2>
-          {project.approvalItems.length === 0 ? (
+          {approvalItems.length === 0 ? (
             <div className="card">
-              <p className="muted">No approval items yet.</p>
+              <p className="muted">No approval items pending your review.</p>
             </div>
           ) : (
             <div className="stack-3">
-              {project.approvalItems.map((item) => (
-                <div key={item.id} className="card stack-2">
-                  <div className="row">
-                    <p className="section-title">{item.title}</p>
-                    <span className={statusBadgeClass(item.status)}>
-                      {item.status}
-                    </span>
+                {approvalItems.map((item) => {
+                  const isPendingOrOverdue =
+                    item.computedStatus === ApprovalStatus.PENDING ||
+                    item.computedStatus === "OVERDUE";
+
+                  return (
+                    <div key={item.id} className="card stack-3">
+                      <div className="row">
+                        <p className="section-title">{item.title}</p>
+                      <span className={statusBadgeClass(item.computedStatus)}>
+                        {statusLabel(item.computedStatus)}
+                      </span>
+                    </div>
+                    {item.description && (
+                      <p className="muted">{item.description}</p>
+                    )}
+                    {item.dueAt && (
+                      <p className="muted">Due: {formatDate(item.dueAt)}</p>
+                    )}
+                    {isPendingOrOverdue && (
+                      <div className="row-start">
+                        <form action={approveItemAction}>
+                          <input type="hidden" name="itemId" value={item.id} />
+                          <button type="submit" className="btn btn-primary">
+                            Approve
+                          </button>
+                        </form>
+                        <form action={rejectItemAction}>
+                          <input type="hidden" name="itemId" value={item.id} />
+                          <button type="submit" className="btn btn-secondary">
+                            Reject
+                          </button>
+                        </form>
+                      </div>
+                    )}
                   </div>
-                  {item.description && (
-                    <p className="muted">{item.description}</p>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>

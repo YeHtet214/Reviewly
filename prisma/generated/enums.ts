@@ -39,8 +39,7 @@ export const ApprovalStatus = {
   DRAFT: 'DRAFT',
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED',
-  OVERDUE: 'OVERDUE'
+  REJECTED: 'REJECTED'
 } as const
 
 export type ApprovalStatus = (typeof ApprovalStatus)[keyof typeof ApprovalStatus]

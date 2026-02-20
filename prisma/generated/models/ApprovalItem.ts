@@ -32,6 +32,7 @@ export type ApprovalItemMinAggregateOutputType = {
   status: $Enums.ApprovalStatus | null
   dueAt: Date | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ApprovalItemMaxAggregateOutputType = {
@@ -42,6 +43,7 @@ export type ApprovalItemMaxAggregateOutputType = {
   status: $Enums.ApprovalStatus | null
   dueAt: Date | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type ApprovalItemCountAggregateOutputType = {
@@ -52,6 +54,7 @@ export type ApprovalItemCountAggregateOutputType = {
   status: number
   dueAt: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -64,6 +67,7 @@ export type ApprovalItemMinAggregateInputType = {
   status?: true
   dueAt?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type ApprovalItemMaxAggregateInputType = {
@@ -74,6 +78,7 @@ export type ApprovalItemMaxAggregateInputType = {
   status?: true
   dueAt?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type ApprovalItemCountAggregateInputType = {
@@ -84,6 +89,7 @@ export type ApprovalItemCountAggregateInputType = {
   status?: true
   dueAt?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -167,6 +173,7 @@ export type ApprovalItemGroupByOutputType = {
   status: $Enums.ApprovalStatus
   dueAt: Date | null
   createdAt: Date
+  updatedAt: Date
   _count: ApprovalItemCountAggregateOutputType | null
   _min: ApprovalItemMinAggregateOutputType | null
   _max: ApprovalItemMaxAggregateOutputType | null
@@ -198,6 +205,7 @@ export type ApprovalItemWhereInput = {
   status?: Prisma.EnumApprovalStatusFilter<"ApprovalItem"> | $Enums.ApprovalStatus
   dueAt?: Prisma.DateTimeNullableFilter<"ApprovalItem"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"ApprovalItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ApprovalItem"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
 }
 
@@ -209,6 +217,7 @@ export type ApprovalItemOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   dueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
 }
 
@@ -223,6 +232,7 @@ export type ApprovalItemWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumApprovalStatusFilter<"ApprovalItem"> | $Enums.ApprovalStatus
   dueAt?: Prisma.DateTimeNullableFilter<"ApprovalItem"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"ApprovalItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ApprovalItem"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectScalarRelationFilter, Prisma.ProjectWhereInput>
 }, "id">
 
@@ -234,6 +244,7 @@ export type ApprovalItemOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   dueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.ApprovalItemCountOrderByAggregateInput
   _max?: Prisma.ApprovalItemMaxOrderByAggregateInput
   _min?: Prisma.ApprovalItemMinOrderByAggregateInput
@@ -250,6 +261,7 @@ export type ApprovalItemScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumApprovalStatusWithAggregatesFilter<"ApprovalItem"> | $Enums.ApprovalStatus
   dueAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ApprovalItem"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ApprovalItem"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ApprovalItem"> | Date | string
 }
 
 export type ApprovalItemCreateInput = {
@@ -259,6 +271,7 @@ export type ApprovalItemCreateInput = {
   status?: $Enums.ApprovalStatus
   dueAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   project: Prisma.ProjectCreateNestedOneWithoutApprovalItemsInput
 }
 
@@ -270,6 +283,7 @@ export type ApprovalItemUncheckedCreateInput = {
   status?: $Enums.ApprovalStatus
   dueAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ApprovalItemUpdateInput = {
@@ -279,6 +293,7 @@ export type ApprovalItemUpdateInput = {
   status?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneRequiredWithoutApprovalItemsNestedInput
 }
 
@@ -290,6 +305,7 @@ export type ApprovalItemUncheckedUpdateInput = {
   status?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ApprovalItemCreateManyInput = {
@@ -300,6 +316,7 @@ export type ApprovalItemCreateManyInput = {
   status?: $Enums.ApprovalStatus
   dueAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ApprovalItemUpdateManyMutationInput = {
@@ -309,6 +326,7 @@ export type ApprovalItemUpdateManyMutationInput = {
   status?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ApprovalItemUncheckedUpdateManyInput = {
@@ -319,6 +337,7 @@ export type ApprovalItemUncheckedUpdateManyInput = {
   status?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ApprovalItemListRelationFilter = {
@@ -339,6 +358,7 @@ export type ApprovalItemCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   dueAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ApprovalItemMaxOrderByAggregateInput = {
@@ -349,6 +369,7 @@ export type ApprovalItemMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   dueAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ApprovalItemMinOrderByAggregateInput = {
@@ -359,6 +380,7 @@ export type ApprovalItemMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   dueAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ApprovalItemCreateNestedManyWithoutProjectInput = {
@@ -414,6 +436,7 @@ export type ApprovalItemCreateWithoutProjectInput = {
   status?: $Enums.ApprovalStatus
   dueAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ApprovalItemUncheckedCreateWithoutProjectInput = {
@@ -423,6 +446,7 @@ export type ApprovalItemUncheckedCreateWithoutProjectInput = {
   status?: $Enums.ApprovalStatus
   dueAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ApprovalItemCreateOrConnectWithoutProjectInput = {
@@ -462,6 +486,7 @@ export type ApprovalItemScalarWhereInput = {
   status?: Prisma.EnumApprovalStatusFilter<"ApprovalItem"> | $Enums.ApprovalStatus
   dueAt?: Prisma.DateTimeNullableFilter<"ApprovalItem"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"ApprovalItem"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ApprovalItem"> | Date | string
 }
 
 export type ApprovalItemCreateManyProjectInput = {
@@ -471,6 +496,7 @@ export type ApprovalItemCreateManyProjectInput = {
   status?: $Enums.ApprovalStatus
   dueAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type ApprovalItemUpdateWithoutProjectInput = {
@@ -480,6 +506,7 @@ export type ApprovalItemUpdateWithoutProjectInput = {
   status?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ApprovalItemUncheckedUpdateWithoutProjectInput = {
@@ -489,6 +516,7 @@ export type ApprovalItemUncheckedUpdateWithoutProjectInput = {
   status?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ApprovalItemUncheckedUpdateManyWithoutProjectInput = {
@@ -498,6 +526,7 @@ export type ApprovalItemUncheckedUpdateManyWithoutProjectInput = {
   status?: Prisma.EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -510,6 +539,7 @@ export type ApprovalItemSelect<ExtArgs extends runtime.Types.Extensions.Internal
   status?: boolean
   dueAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["approvalItem"]>
 
@@ -521,6 +551,7 @@ export type ApprovalItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   status?: boolean
   dueAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["approvalItem"]>
 
@@ -532,6 +563,7 @@ export type ApprovalItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   status?: boolean
   dueAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["approvalItem"]>
 
@@ -543,9 +575,10 @@ export type ApprovalItemSelectScalar = {
   status?: boolean
   dueAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type ApprovalItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "title" | "description" | "status" | "dueAt" | "createdAt", ExtArgs["result"]["approvalItem"]>
+export type ApprovalItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "title" | "description" | "status" | "dueAt" | "createdAt" | "updatedAt", ExtArgs["result"]["approvalItem"]>
 export type ApprovalItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }
@@ -569,6 +602,7 @@ export type $ApprovalItemPayload<ExtArgs extends runtime.Types.Extensions.Intern
     status: $Enums.ApprovalStatus
     dueAt: Date | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["approvalItem"]>
   composites: {}
 }
@@ -1000,6 +1034,7 @@ export interface ApprovalItemFieldRefs {
   readonly status: Prisma.FieldRef<"ApprovalItem", 'ApprovalStatus'>
   readonly dueAt: Prisma.FieldRef<"ApprovalItem", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"ApprovalItem", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"ApprovalItem", 'DateTime'>
 }
     
 

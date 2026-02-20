@@ -2,7 +2,11 @@ import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/src/lib/auth";
 import { getProject } from "@/src/server/projects/get-project";
-import { ProjectStatus } from "@/prisma/generated/client";
+import { getApprovalItemsForInternal } from "@/src/server/approval-items/get-approval-items";
+import { ApprovalStatus, ProjectStatus } from "@/prisma/generated/client";
+import { submitApprovalItemAction } from "./actions";
+import { CreateApprovalItemForm } from "./create-form";
+import type { ApprovalItemRow } from "@/src/server/approval-items/get-approval-items";
 
 function formatDate(date: Date | null): string {
     if (!date) return "—";
@@ -42,6 +46,90 @@ function statusLabel(status: ProjectStatus): string {
 type Props = {
     params: Promise<{ projectId: string }>;
 };
+
+function approvalStatusBadgeClass(status: ApprovalStatus): string {
+    switch (status) {
+        case ApprovalStatus.APPROVED:
+            return "badge badge-approved";
+        case ApprovalStatus.PENDING:
+            return "badge badge-pending";
+        case ApprovalStatus.REJECTED:
+            return "badge badge-overdue";
+        default:
+            return "badge badge-role";
+    }
+}
+
+function approvalStatusLabel(status: ApprovalStatus): string {
+    switch (status) {
+        case ApprovalStatus.DRAFT:
+            return "Draft";
+        case ApprovalStatus.PENDING:
+            return "Pending";
+        case ApprovalStatus.APPROVED:
+            return "Approved";
+        case ApprovalStatus.REJECTED:
+            return "Rejected";
+        default:
+            return status;
+    }
+}
+
+async function ApprovalItemsSection({
+    projectId,
+    userId,
+}: {
+    projectId: string;
+    userId: string;
+}) {
+    void userId; // passed for future filtering needs
+    const items = await getApprovalItemsForInternal(projectId);
+
+    return (
+        <section className="stack-4">
+            <h2 className="section-title">Approval items</h2>
+
+            {/* Create form */}
+            <CreateApprovalItemForm projectId={projectId} />
+
+            {/* Items list */}
+            {items.length === 0 ? (
+                <div className="card">
+                    <p className="muted">No approval items yet.</p>
+                </div>
+            ) : (
+                <div className="stack-3">
+                    {items.map((item: ApprovalItemRow) => (
+                        <div key={item.id} className="card stack-3">
+                            <div className="row">
+                                <p className="section-title">{item.title}</p>
+                                <span className={approvalStatusBadgeClass(item.status)}>
+                                    {approvalStatusLabel(item.status)}
+                                </span>
+                            </div>
+                            {item.description && (
+                                <p className="muted">{item.description}</p>
+                            )}
+                            {item.dueAt && (
+                                <p className="muted">Due: {formatDate(item.dueAt)}</p>
+                            )}
+                            {item.status === ApprovalStatus.DRAFT && (
+                                <form action={submitApprovalItemAction}>
+                                    <input type="hidden" name="itemId" value={item.id} />
+                                    <input type="hidden" name="projectId" value={projectId} />
+                                    <button type="submit" className="btn btn-secondary">
+                                        Submit for review
+                                    </button>
+                                </form>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </section>
+    );
+}
+
 
 export default async function ProjectDetailPage({ params }: Props) {
     const { projectId } = await params;
@@ -100,12 +188,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                     </div>
                 </section>
 
-                <section className="card">
-                    <div className="stack-2">
-                        <h2 className="section-title">Approval items</h2>
-                        <p className="muted">Approval items coming next.</p>
-                    </div>
-                </section>
+                <ApprovalItemsSection projectId={project.id} userId={session.user.id} />
             </div>
         </main>
     );

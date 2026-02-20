@@ -153,7 +153,8 @@ export const ApprovalItemScalarFieldEnum = {
   description: 'description',
   status: 'status',
   dueAt: 'dueAt',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ApprovalItemScalarFieldEnum = (typeof ApprovalItemScalarFieldEnum)[keyof typeof ApprovalItemScalarFieldEnum]
