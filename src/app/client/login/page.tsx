@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/src/components/ui/card";
-import { Button } from "@/src/components/ui/button";
-import { requestLoginLinkAction } from "./actions";
+import LoginForm from "./login-form";
 
 const ERROR_MESSAGES: Record<string, string> = {
   NOT_FOUND: "Invite link was not found.",
@@ -19,7 +18,9 @@ export default async function ClientLoginPage({
   const params = await searchParams;
   const sent = params.sent === "1";
   const errorCode = typeof params.error === "string" ? params.error : null;
-  const errorMessage = errorCode ? (ERROR_MESSAGES[errorCode] ?? "Something went wrong.") : null;
+  const initialError = errorCode
+    ? (ERROR_MESSAGES[errorCode] ?? "Something went wrong.")
+    : null;
 
   return (
     <main className="auth-shell">
@@ -40,35 +41,13 @@ export default async function ClientLoginPage({
           </CardHeader>
 
           <CardContent className="stack-4">
-            {errorMessage && (
-              <p className="error-text">{errorMessage}</p>
-            )}
-
             {sent ? (
               <p className="muted">
                 If your email is registered, you will receive a login link
                 shortly. The link expires in 1 hour.
               </p>
             ) : (
-              <form action={requestLoginLinkAction} className="stack-4">
-                <div className="stack-2">
-                  <label htmlFor="email" className="muted">
-                    Email address
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                    className="input"
-                  />
-                </div>
-                <Button type="submit" className="btn-primary w-full">
-                  Send login link
-                </Button>
-              </form>
+                <LoginForm initialError={initialError} />
             )}
           </CardContent>
         </div>
