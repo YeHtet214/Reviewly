@@ -172,7 +172,7 @@ export type ProjectGroupByOutputType = {
   description: string
   status: $Enums.ProjectStatus
   createdAt: Date
-  dueAt: Date
+  dueAt: Date | null
   createdByUserId: string
   _count: ProjectCountAggregateOutputType | null
   _min: ProjectMinAggregateOutputType | null
@@ -204,11 +204,13 @@ export type ProjectWhereInput = {
   description?: Prisma.StringFilter<"Project"> | string
   status?: Prisma.EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
-  dueAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  dueAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   createdByUserId?: Prisma.StringFilter<"Project"> | string
   agency?: Prisma.XOR<Prisma.AgencyScalarRelationFilter, Prisma.AgencyWhereInput>
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   clientProjectAccesses?: Prisma.ClientProjectAccessListRelationFilter
+  approvalItems?: Prisma.ApprovalItemListRelationFilter
+  invitations?: Prisma.InvitationListRelationFilter
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -218,11 +220,13 @@ export type ProjectOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  dueAt?: Prisma.SortOrder
+  dueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   agency?: Prisma.AgencyOrderByWithRelationInput
   createdByUser?: Prisma.UserOrderByWithRelationInput
   clientProjectAccesses?: Prisma.ClientProjectAccessOrderByRelationAggregateInput
+  approvalItems?: Prisma.ApprovalItemOrderByRelationAggregateInput
+  invitations?: Prisma.InvitationOrderByRelationAggregateInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -235,11 +239,13 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Project"> | string
   status?: Prisma.EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
-  dueAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  dueAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   createdByUserId?: Prisma.StringFilter<"Project"> | string
   agency?: Prisma.XOR<Prisma.AgencyScalarRelationFilter, Prisma.AgencyWhereInput>
   createdByUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   clientProjectAccesses?: Prisma.ClientProjectAccessListRelationFilter
+  approvalItems?: Prisma.ApprovalItemListRelationFilter
+  invitations?: Prisma.InvitationListRelationFilter
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -249,7 +255,7 @@ export type ProjectOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  dueAt?: Prisma.SortOrder
+  dueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdByUserId?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
   _max?: Prisma.ProjectMaxOrderByAggregateInput
@@ -266,7 +272,7 @@ export type ProjectScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"Project"> | string
   status?: Prisma.EnumProjectStatusWithAggregatesFilter<"Project"> | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
-  dueAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
+  dueAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   createdByUserId?: Prisma.StringWithAggregatesFilter<"Project"> | string
 }
 
@@ -276,10 +282,12 @@ export type ProjectCreateInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   agency: Prisma.AgencyCreateNestedOneWithoutProjectsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
   clientProjectAccesses?: Prisma.ClientProjectAccessCreateNestedManyWithoutProjectInput
+  approvalItems?: Prisma.ApprovalItemCreateNestedManyWithoutProjectInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -289,9 +297,11 @@ export type ProjectUncheckedCreateInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUserId: string
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedCreateNestedManyWithoutProjectInput
+  approvalItems?: Prisma.ApprovalItemUncheckedCreateNestedManyWithoutProjectInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -300,10 +310,12 @@ export type ProjectUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agency?: Prisma.AgencyUpdateOneRequiredWithoutProjectsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
   clientProjectAccesses?: Prisma.ClientProjectAccessUpdateManyWithoutProjectNestedInput
+  approvalItems?: Prisma.ApprovalItemUpdateManyWithoutProjectNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -313,9 +325,11 @@ export type ProjectUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedUpdateManyWithoutProjectNestedInput
+  approvalItems?: Prisma.ApprovalItemUncheckedUpdateManyWithoutProjectNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -325,7 +339,7 @@ export type ProjectCreateManyInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUserId: string
 }
 
@@ -335,7 +349,7 @@ export type ProjectUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ProjectUncheckedUpdateManyInput = {
@@ -345,7 +359,7 @@ export type ProjectUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -357,6 +371,11 @@ export type ProjectListRelationFilter = {
 
 export type ProjectOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ProjectNullableScalarRelationFilter = {
+  is?: Prisma.ProjectWhereInput | null
+  isNot?: Prisma.ProjectWhereInput | null
 }
 
 export type ProjectCountOrderByAggregateInput = {
@@ -481,8 +500,38 @@ export type ProjectUncheckedUpdateManyWithoutCreatedByUserNestedInput = {
   deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
 }
 
+export type ProjectCreateNestedOneWithoutInvitationsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutInvitationsInput, Prisma.ProjectUncheckedCreateWithoutInvitationsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutInvitationsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneWithoutInvitationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutInvitationsInput, Prisma.ProjectUncheckedCreateWithoutInvitationsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutInvitationsInput
+  upsert?: Prisma.ProjectUpsertWithoutInvitationsInput
+  disconnect?: Prisma.ProjectWhereInput | boolean
+  delete?: Prisma.ProjectWhereInput | boolean
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutInvitationsInput, Prisma.ProjectUpdateWithoutInvitationsInput>, Prisma.ProjectUncheckedUpdateWithoutInvitationsInput>
+}
+
 export type EnumProjectStatusFieldUpdateOperationsInput = {
   set?: $Enums.ProjectStatus
+}
+
+export type ProjectCreateNestedOneWithoutApprovalItemsInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutApprovalItemsInput, Prisma.ProjectUncheckedCreateWithoutApprovalItemsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutApprovalItemsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutApprovalItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutApprovalItemsInput, Prisma.ProjectUncheckedCreateWithoutApprovalItemsInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutApprovalItemsInput
+  upsert?: Prisma.ProjectUpsertWithoutApprovalItemsInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutApprovalItemsInput, Prisma.ProjectUpdateWithoutApprovalItemsInput>, Prisma.ProjectUncheckedUpdateWithoutApprovalItemsInput>
 }
 
 export type ProjectCreateNestedOneWithoutClientProjectAccessesInput = {
@@ -505,9 +554,11 @@ export type ProjectCreateWithoutAgencyInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
   clientProjectAccesses?: Prisma.ClientProjectAccessCreateNestedManyWithoutProjectInput
+  approvalItems?: Prisma.ApprovalItemCreateNestedManyWithoutProjectInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutAgencyInput = {
@@ -516,9 +567,11 @@ export type ProjectUncheckedCreateWithoutAgencyInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUserId: string
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedCreateNestedManyWithoutProjectInput
+  approvalItems?: Prisma.ApprovalItemUncheckedCreateNestedManyWithoutProjectInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutAgencyInput = {
@@ -557,7 +610,7 @@ export type ProjectScalarWhereInput = {
   description?: Prisma.StringFilter<"Project"> | string
   status?: Prisma.EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
-  dueAt?: Prisma.DateTimeFilter<"Project"> | Date | string
+  dueAt?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   createdByUserId?: Prisma.StringFilter<"Project"> | string
 }
 
@@ -567,9 +620,11 @@ export type ProjectCreateWithoutCreatedByUserInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   agency: Prisma.AgencyCreateNestedOneWithoutProjectsInput
   clientProjectAccesses?: Prisma.ClientProjectAccessCreateNestedManyWithoutProjectInput
+  approvalItems?: Prisma.ApprovalItemCreateNestedManyWithoutProjectInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutCreatedByUserInput = {
@@ -579,8 +634,10 @@ export type ProjectUncheckedCreateWithoutCreatedByUserInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedCreateNestedManyWithoutProjectInput
+  approvalItems?: Prisma.ApprovalItemUncheckedCreateNestedManyWithoutProjectInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutCreatedByUserInput = {
@@ -609,15 +666,153 @@ export type ProjectUpdateManyWithWhereWithoutCreatedByUserInput = {
   data: Prisma.XOR<Prisma.ProjectUpdateManyMutationInput, Prisma.ProjectUncheckedUpdateManyWithoutCreatedByUserInput>
 }
 
+export type ProjectCreateWithoutInvitationsInput = {
+  id?: string
+  name: string
+  description: string
+  status: $Enums.ProjectStatus
+  createdAt?: Date | string
+  dueAt?: Date | string | null
+  agency: Prisma.AgencyCreateNestedOneWithoutProjectsInput
+  createdByUser: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
+  clientProjectAccesses?: Prisma.ClientProjectAccessCreateNestedManyWithoutProjectInput
+  approvalItems?: Prisma.ApprovalItemCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutInvitationsInput = {
+  id?: string
+  agencyId: string
+  name: string
+  description: string
+  status: $Enums.ProjectStatus
+  createdAt?: Date | string
+  dueAt?: Date | string | null
+  createdByUserId: string
+  clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedCreateNestedManyWithoutProjectInput
+  approvalItems?: Prisma.ApprovalItemUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutInvitationsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutInvitationsInput, Prisma.ProjectUncheckedCreateWithoutInvitationsInput>
+}
+
+export type ProjectUpsertWithoutInvitationsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutInvitationsInput, Prisma.ProjectUncheckedUpdateWithoutInvitationsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutInvitationsInput, Prisma.ProjectUncheckedCreateWithoutInvitationsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutInvitationsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutInvitationsInput, Prisma.ProjectUncheckedUpdateWithoutInvitationsInput>
+}
+
+export type ProjectUpdateWithoutInvitationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agency?: Prisma.AgencyUpdateOneRequiredWithoutProjectsNestedInput
+  createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
+  clientProjectAccesses?: Prisma.ClientProjectAccessUpdateManyWithoutProjectNestedInput
+  approvalItems?: Prisma.ApprovalItemUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutInvitationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedUpdateManyWithoutProjectNestedInput
+  approvalItems?: Prisma.ApprovalItemUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutApprovalItemsInput = {
+  id?: string
+  name: string
+  description: string
+  status: $Enums.ProjectStatus
+  createdAt?: Date | string
+  dueAt?: Date | string | null
+  agency: Prisma.AgencyCreateNestedOneWithoutProjectsInput
+  createdByUser: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
+  clientProjectAccesses?: Prisma.ClientProjectAccessCreateNestedManyWithoutProjectInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutApprovalItemsInput = {
+  id?: string
+  agencyId: string
+  name: string
+  description: string
+  status: $Enums.ProjectStatus
+  createdAt?: Date | string
+  dueAt?: Date | string | null
+  createdByUserId: string
+  clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedCreateNestedManyWithoutProjectInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutApprovalItemsInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutApprovalItemsInput, Prisma.ProjectUncheckedCreateWithoutApprovalItemsInput>
+}
+
+export type ProjectUpsertWithoutApprovalItemsInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutApprovalItemsInput, Prisma.ProjectUncheckedUpdateWithoutApprovalItemsInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutApprovalItemsInput, Prisma.ProjectUncheckedCreateWithoutApprovalItemsInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutApprovalItemsInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutApprovalItemsInput, Prisma.ProjectUncheckedUpdateWithoutApprovalItemsInput>
+}
+
+export type ProjectUpdateWithoutApprovalItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  agency?: Prisma.AgencyUpdateOneRequiredWithoutProjectsNestedInput
+  createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
+  clientProjectAccesses?: Prisma.ClientProjectAccessUpdateManyWithoutProjectNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutApprovalItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  agencyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedUpdateManyWithoutProjectNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutProjectNestedInput
+}
+
 export type ProjectCreateWithoutClientProjectAccessesInput = {
   id?: string
   name: string
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   agency: Prisma.AgencyCreateNestedOneWithoutProjectsInput
   createdByUser: Prisma.UserCreateNestedOneWithoutCreatedProjectsInput
+  approvalItems?: Prisma.ApprovalItemCreateNestedManyWithoutProjectInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutClientProjectAccessesInput = {
@@ -627,8 +822,10 @@ export type ProjectUncheckedCreateWithoutClientProjectAccessesInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUserId: string
+  approvalItems?: Prisma.ApprovalItemUncheckedCreateNestedManyWithoutProjectInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutClientProjectAccessesInput = {
@@ -653,9 +850,11 @@ export type ProjectUpdateWithoutClientProjectAccessesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agency?: Prisma.AgencyUpdateOneRequiredWithoutProjectsNestedInput
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
+  approvalItems?: Prisma.ApprovalItemUpdateManyWithoutProjectNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutClientProjectAccessesInput = {
@@ -665,8 +864,10 @@ export type ProjectUncheckedUpdateWithoutClientProjectAccessesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  approvalItems?: Prisma.ApprovalItemUncheckedUpdateManyWithoutProjectNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyAgencyInput = {
@@ -675,7 +876,7 @@ export type ProjectCreateManyAgencyInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
   createdByUserId: string
 }
 
@@ -685,9 +886,11 @@ export type ProjectUpdateWithoutAgencyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUser?: Prisma.UserUpdateOneRequiredWithoutCreatedProjectsNestedInput
   clientProjectAccesses?: Prisma.ClientProjectAccessUpdateManyWithoutProjectNestedInput
+  approvalItems?: Prisma.ApprovalItemUpdateManyWithoutProjectNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutAgencyInput = {
@@ -696,9 +899,11 @@ export type ProjectUncheckedUpdateWithoutAgencyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedUpdateManyWithoutProjectNestedInput
+  approvalItems?: Prisma.ApprovalItemUncheckedUpdateManyWithoutProjectNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutAgencyInput = {
@@ -707,7 +912,7 @@ export type ProjectUncheckedUpdateManyWithoutAgencyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdByUserId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -718,7 +923,7 @@ export type ProjectCreateManyCreatedByUserInput = {
   description: string
   status: $Enums.ProjectStatus
   createdAt?: Date | string
-  dueAt: Date | string
+  dueAt?: Date | string | null
 }
 
 export type ProjectUpdateWithoutCreatedByUserInput = {
@@ -727,9 +932,11 @@ export type ProjectUpdateWithoutCreatedByUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   agency?: Prisma.AgencyUpdateOneRequiredWithoutProjectsNestedInput
   clientProjectAccesses?: Prisma.ClientProjectAccessUpdateManyWithoutProjectNestedInput
+  approvalItems?: Prisma.ApprovalItemUpdateManyWithoutProjectNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutCreatedByUserInput = {
@@ -739,8 +946,10 @@ export type ProjectUncheckedUpdateWithoutCreatedByUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   clientProjectAccesses?: Prisma.ClientProjectAccessUncheckedUpdateManyWithoutProjectNestedInput
+  approvalItems?: Prisma.ApprovalItemUncheckedUpdateManyWithoutProjectNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutCreatedByUserInput = {
@@ -750,7 +959,7 @@ export type ProjectUncheckedUpdateManyWithoutCreatedByUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  dueAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -760,10 +969,14 @@ export type ProjectUncheckedUpdateManyWithoutCreatedByUserInput = {
 
 export type ProjectCountOutputType = {
   clientProjectAccesses: number
+  approvalItems: number
+  invitations: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   clientProjectAccesses?: boolean | ProjectCountOutputTypeCountClientProjectAccessesArgs
+  approvalItems?: boolean | ProjectCountOutputTypeCountApprovalItemsArgs
+  invitations?: boolean | ProjectCountOutputTypeCountInvitationsArgs
 }
 
 /**
@@ -783,6 +996,20 @@ export type ProjectCountOutputTypeCountClientProjectAccessesArgs<ExtArgs extends
   where?: Prisma.ClientProjectAccessWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountApprovalItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApprovalItemWhereInput
+}
+
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountInvitationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InvitationWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -796,6 +1023,8 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   agency?: boolean | Prisma.AgencyDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   clientProjectAccesses?: boolean | Prisma.Project$clientProjectAccessesArgs<ExtArgs>
+  approvalItems?: boolean | Prisma.Project$approvalItemsArgs<ExtArgs>
+  invitations?: boolean | Prisma.Project$invitationsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -841,6 +1070,8 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   agency?: boolean | Prisma.AgencyDefaultArgs<ExtArgs>
   createdByUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   clientProjectAccesses?: boolean | Prisma.Project$clientProjectAccessesArgs<ExtArgs>
+  approvalItems?: boolean | Prisma.Project$approvalItemsArgs<ExtArgs>
+  invitations?: boolean | Prisma.Project$invitationsArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -858,6 +1089,8 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     agency: Prisma.$AgencyPayload<ExtArgs>
     createdByUser: Prisma.$UserPayload<ExtArgs>
     clientProjectAccesses: Prisma.$ClientProjectAccessPayload<ExtArgs>[]
+    approvalItems: Prisma.$ApprovalItemPayload<ExtArgs>[]
+    invitations: Prisma.$InvitationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -866,7 +1099,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     description: string
     status: $Enums.ProjectStatus
     createdAt: Date
-    dueAt: Date
+    dueAt: Date | null
     createdByUserId: string
   }, ExtArgs["result"]["project"]>
   composites: {}
@@ -1265,6 +1498,8 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   agency<T extends Prisma.AgencyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AgencyDefaultArgs<ExtArgs>>): Prisma.Prisma__AgencyClient<runtime.Types.Result.GetResult<Prisma.$AgencyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   createdByUser<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   clientProjectAccesses<T extends Prisma.Project$clientProjectAccessesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$clientProjectAccessesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientProjectAccessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvalItems<T extends Prisma.Project$approvalItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$approvalItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invitations<T extends Prisma.Project$invitationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1719,6 +1954,54 @@ export type Project$clientProjectAccessesArgs<ExtArgs extends runtime.Types.Exte
   take?: number
   skip?: number
   distinct?: Prisma.ClientProjectAccessScalarFieldEnum | Prisma.ClientProjectAccessScalarFieldEnum[]
+}
+
+/**
+ * Project.approvalItems
+ */
+export type Project$approvalItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ApprovalItem
+   */
+  select?: Prisma.ApprovalItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ApprovalItem
+   */
+  omit?: Prisma.ApprovalItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApprovalItemInclude<ExtArgs> | null
+  where?: Prisma.ApprovalItemWhereInput
+  orderBy?: Prisma.ApprovalItemOrderByWithRelationInput | Prisma.ApprovalItemOrderByWithRelationInput[]
+  cursor?: Prisma.ApprovalItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ApprovalItemScalarFieldEnum | Prisma.ApprovalItemScalarFieldEnum[]
+}
+
+/**
+ * Project.invitations
+ */
+export type Project$invitationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invitation
+   */
+  select?: Prisma.InvitationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invitation
+   */
+  omit?: Prisma.InvitationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvitationInclude<ExtArgs> | null
+  where?: Prisma.InvitationWhereInput
+  orderBy?: Prisma.InvitationOrderByWithRelationInput | Prisma.InvitationOrderByWithRelationInput[]
+  cursor?: Prisma.InvitationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InvitationScalarFieldEnum | Prisma.InvitationScalarFieldEnum[]
 }
 
 /**

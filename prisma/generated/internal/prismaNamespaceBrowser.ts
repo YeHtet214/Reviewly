@@ -56,11 +56,14 @@ export const ModelName = {
   Membership: 'Membership',
   Invitation: 'Invitation',
   Project: 'Project',
+  ApprovalItem: 'ApprovalItem',
   Client: 'Client',
   ClientProjectAccess: 'ClientProjectAccess',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  ClientSession: 'ClientSession',
+  ClientLoginLink: 'ClientLoginLink'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -143,6 +146,19 @@ export const ProjectScalarFieldEnum = {
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
 
 
+export const ApprovalItemScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  dueAt: 'dueAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ApprovalItemScalarFieldEnum = (typeof ApprovalItemScalarFieldEnum)[keyof typeof ApprovalItemScalarFieldEnum]
+
+
 export const ClientScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -209,6 +225,30 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const ClientSessionScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  revokedAt: 'revokedAt'
+} as const
+
+export type ClientSessionScalarFieldEnum = (typeof ClientSessionScalarFieldEnum)[keyof typeof ClientSessionScalarFieldEnum]
+
+
+export const ClientLoginLinkScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type ClientLoginLinkScalarFieldEnum = (typeof ClientLoginLinkScalarFieldEnum)[keyof typeof ClientLoginLinkScalarFieldEnum]
 
 
 export const SortOrder = {

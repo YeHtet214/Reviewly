@@ -11,7 +11,7 @@ type AcceptInviteInput = {
 
 export type AcceptInviteResult =
   | { ok: true }
-  | { ok: false; code: InviteErrorCode | "NOT_IMPLEMENTED"; message: string };
+  | { ok: false; code: InviteErrorCode; message: string };
 
 const acceptInviteSchema = z.object({
   token: z.string().min(1),
@@ -127,10 +127,11 @@ export async function acceptInvite(
     }
 
     if (invite.type === InvitationType.CLIENT) {
+      // CLIENT invites are handled by /client/invite/accept route — should not reach here
       return {
         ok: false,
-        code: "NOT_IMPLEMENTED",
-        message: "Client invitations are not supported yet.",
+        code: InviteErrorCode.INVALID,
+        message: "Client invitations must be accepted via the client portal.",
       };
     }
 

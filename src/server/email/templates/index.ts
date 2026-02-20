@@ -137,3 +137,25 @@ export function buildMemberInviteEmail(
 
     return { subject, text, html };
 }
+
+type BuildClientLoginLinkEmailInput = {
+    loginUrl: string;
+};
+
+export function buildClientLoginLinkEmail(
+    input: BuildClientLoginLinkEmailInput,
+): EmailContent {
+    const validatedLoginUrl = normalizeInviteUrl(input.loginUrl);
+    const safeLoginUrl = escapeHtml(validatedLoginUrl);
+
+    const subject = "Your Reviewly login link";
+    const text = `Click the link below to log in to Reviewly.\n\n${validatedLoginUrl}\n\nThis link expires in 1 hour. If you did not request this, you can ignore this email.`;
+    const html = buildBaseHtml({
+        introHtml: "Click the button below to log in to Reviewly.",
+        actionUrl: safeLoginUrl,
+        actionText: "Log in to Reviewly",
+    });
+
+    return { subject, text, html };
+}
+

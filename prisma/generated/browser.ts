@@ -43,6 +43,11 @@ export type Invitation = Prisma.InvitationModel
  */
 export type Project = Prisma.ProjectModel
 /**
+ * Model ApprovalItem
+ * 
+ */
+export type ApprovalItem = Prisma.ApprovalItemModel
+/**
  * Model Client
  * 
  */
@@ -67,3 +72,13 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model ClientSession
+ * 
+ */
+export type ClientSession = Prisma.ClientSessionModel
+/**
+ * Model ClientLoginLink
+ * 
+ */
+export type ClientLoginLink = Prisma.ClientLoginLinkModel
